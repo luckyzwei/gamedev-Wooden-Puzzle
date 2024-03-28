@@ -1,0 +1,45 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 25ccf97b04861664ca65c20cc93e3692, type: 3}
+  m_Name: ArmorData
+  m_EditorClassIdentifier: 
+  ARMORS:
+  - name: Steel
+    gold: 1000
+    level: 1
+  - name: Silver
+    gold: 1000
+    level: 1
+  - name: Gold
+    gold: 2000
+    level: 1
+  - name: Diamond
+    gold: 1000
+    level: 1
+  - name: Bronze
+    gold: 1000
+    level: 1
+  - name: Steel
+    gold: 1000
+    level: 1
+  - name: Gold
+    gold: 1000
+    level: 1
+  - name: Silver
+    gold: 1000
+    level: 1
+  - name: Diamond
+    gold: 1000
+    level: 1
+  - name: Gold
+    gold: 1000
+    level: 1

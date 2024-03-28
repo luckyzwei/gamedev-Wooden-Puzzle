@@ -1,0 +1,23 @@
+fileFormatVersion: 2
+guid: 4661ef80a001aa94f937acbab815fff7
+TrueTypeFontImporter:
+  externalObjects: {}
+  serializedVersion: 4
+  fontSize: 16
+  forceTextureCase: -2
+  characterSpacing: 0
+  characterPadding: 1
+  includeFontData: 1
+  fontNames:
+  - UTM Helve
+  fallbackFontReferences:
+  - {fileID: 12800000, guid: 8056c51580296144f83ecade6c967c58, type: 3}
+  - {fileID: 12800000, guid: fe6df99e9fc1f834e9dd0a8dab96b383, type: 3}
+  customCharacters: 
+  fontRenderingMode: 0
+  ascentCalculationMode: 1
+  useLegacyBoundsCalculation: 0
+  shouldRoundAdvanceValue: 1
+  userData: 
+  assetBundleName: 
+  assetBundleVariant: 
