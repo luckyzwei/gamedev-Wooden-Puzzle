@@ -1,24 +1,14 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class Circle : MonoBehaviour
+namespace NutBolts.Scripts.Item
 {
-    // Start is called before the first frame update
-    void Start()
+    public class Circle : MonoBehaviour
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
-    public void Init(int Index)
-    {
-        var spriteMask = GetComponent<SpriteMask>();
-        spriteMask.frontSortingOrder = Index+1;
-        spriteMask.backSortingOrder = Index - 1;
+        public void Init(int index)
+        {
+            var spriteMask = GetComponent<SpriteMask>();
+            spriteMask.frontSortingOrder = index+1;
+            spriteMask.backSortingOrder = index - 1;
+        }
     }
 }

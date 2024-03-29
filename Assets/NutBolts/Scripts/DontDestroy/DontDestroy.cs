@@ -1,18 +1,12 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
-public class DontDestroy : MonoBehaviour
+namespace NutBolts.Scripts.DontDestroy
 {
-    // Start is called before the first frame update
-    void Awake()
+    public class DontDestroy : MonoBehaviour
     {
-        DontDestroyOnLoad(this);
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        void Awake()
+        {
+            DontDestroyOnLoad(this);
+        }
     }
 }

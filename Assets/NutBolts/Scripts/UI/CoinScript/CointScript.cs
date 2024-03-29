@@ -1,21 +1,23 @@
-using System.Collections;
-using System.Collections.Generic;
+using NutBolts.Scripts.Data;
 using UnityEngine;
 using UnityEngine.UI;
-public class CointScript : MonoBehaviour
-{
-    public int Coin;
-    private Text textCoin;
-    // Start is called before the first frame update
-    void Start()
-    {
-        textCoin = GetComponent<Text>();
-    }
 
-    // Update is called once per frame
-    void Update()
+namespace NutBolts.Scripts.UI.CoinScript
+{
+    internal class CointScript : MonoBehaviour
     {
-        Coin = UserData.Instance.CGameData.TotalCoin;
-        textCoin.text = Coin.ToString("N0");
+        public int Coin;
+        private Text textCoin;
+
+        private void Start()
+        {
+            textCoin = GetComponent<Text>();
+        }
+
+        private void Update()
+        {
+            Coin = UserData.Instance.CGameData.TotalCoin;
+            textCoin.text = Coin.ToString("N0");
+        }
     }
 }

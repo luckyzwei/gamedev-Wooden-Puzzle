@@ -1,123 +1,56 @@
-using System.Collections;
 using System.Collections.Generic;
+using NutBolts.Scripts.Data;
 using UnityEngine;
 using VKSdk;
 using VKSdk.UI;
 
-public class UIMenu : VKLayer
+namespace NutBolts.Scripts.UI.UIMenu
 {
-    // Start is called before the first frame update
-    void Start()
+    public class UIMenu : VKLayer
     {
-
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-
-    }
-    public override void BeforeHideLayer()
-    {
-        base.BeforeHideLayer();
-    }
-
-    public override void Close()
-    {
-        base.Close();
-    }
-
-    public override void DestroyLayer()
-    {
-        base.DestroyLayer();
-    }
-
-    public override void DisableLayer()
-    {
-        base.DisableLayer();
-    }
-
-    public override void EnableLayer()
-    {
-        base.EnableLayer();
-    }
-
-    public override void FirstLoadLayer()
-    {
-        base.FirstLoadLayer();
-    }
-
-    public override void HideLayer()
-    {
-        base.HideLayer();
-    }
-
-    public override void OnLayerCloseDone()
-    {
-        base.OnLayerCloseDone();
-    }
-
-    public override void OnLayerOpenDone()
-    {
-        base.OnLayerOpenDone();
-    }
-
-    public override void OnLayerOpenPopupDone()
-    {
-        base.OnLayerOpenPopupDone();
-    }
-
-    public override void OnLayerPopupCloseDone()
-    {
-        base.OnLayerPopupCloseDone();
-    }
-
-    public override void OnLayerReOpenDone()
-    {
-        base.OnLayerReOpenDone();
-    }
-
-    public override void OnLayerSlideHideDone()
-    {
-        base.OnLayerSlideHideDone();
-    }
-
-    public override void ReloadCanvasScale(float screenRatio, float screenScale)
-    {
-        base.ReloadCanvasScale(screenRatio, screenScale);
-    }
-
-    public override void ReloadLayer()
-    {
-        base.ReloadLayer();
-    }
-
-    public override void ShowLayer()
-    {
-        base.ShowLayer();
-        if (UserData.Instance.CSettingData.isMusic)
+        [SerializeField] private List<LevelButton> _levelButtons;
+        private void Start()
         {
-            VKAudioController.Instance.PlayMusic("game_music");
+            for (var i = 0; i < _levelButtons.Count; i++)
+            {
+                int levelIndex = i;
+                _levelButtons[i].Assign(i+1);
+                _levelButtons[i].Button.onClick.AddListener((() =>
+                {
+                    LoadLevel(levelIndex);
+                }));
+            }
         }
-    }
 
-    public override void StartLayer()
-    {
-        base.StartLayer();
-    }
-    public void OnClickPlay()
-    {
-        VKAudioController.Instance.PlaySound("Button");
-        VKLayerController.Instance.ShowLoading();
-        PlayerPrefs.SetInt("OpenLevel", UserData.Instance.CGameData.CurrentLevel);
-        CLevelManager.Instance.LoadLevel();
-        CLevelManager.THIS.GameStatus = GameState.PrepareGame;
-        Close();
-    }
-    public void OnClickSetting()
-    {
-        VKAudioController.Instance.PlaySound("Button");
-        VKLayerController.Instance.ShowLayer("UISetting");
-    }
+  
+        public override void ShowLayer()
+        {
+            base.ShowLayer();
+            if (UserData.Instance.CSettingData.isMusic)
+            {
+                VKAudioController.Instance.PlayMusic("game_music");
+            }
+        }
+    
+        public void OnClickPlay()
+        {
+            LoadLevel(UserData.Instance.CGameData.CurrentLevel);
+        }
+    
+        private void LoadLevel(int levelIndex)
+        {
+            VKAudioController.Instance.PlaySound("Button");
+            VKLayerController.Instance.ShowLoading();
+            PlayerPrefs.SetInt("OpenLevel", levelIndex);
+            CLevelManager.Instance.LoadLevel();
+            CLevelManager.THIS.GameStatus = GameState.PrepareGame;
+            Close();
+        }
+        public void OnClickSetting()
+        {
+            VKAudioController.Instance.PlaySound("Button");
+            VKLayerController.Instance.ShowLayer("UISetting");
+        }
 
+    }
 }

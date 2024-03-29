@@ -1,26 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using UnityEngine;
-using UnityEngine.Events;
 
-namespace Library
+namespace NutBolts.Scripts.Item
 {
-    public interface ILoom
-    {
-        Task Delay(float seconds);
-        Task Delay(TimeSpan time);
-        void Clear();
-        Thread RunAsync(Action a);
-        void QueueOnMainThread(Action action);
-        void QueueOnMainThread(Action action, float time);
-        int QueuedItemCount { get; }
-    }
-
-    public class Loom : MonoBehaviour, ILoom
+    public class Loom : MonoBehaviour
     {
         public int maxThreads = 8;
 
@@ -38,15 +25,6 @@ namespace Library
         private List<ConditionalQueueItem> _currentConditional = new List<ConditionalQueueItem>();
 
         private static Loom _instance;
-        public static Loom Instance
-        {
-            get
-            {
-                if (_instance == null) _instance = GameObject.FindObjectOfType<Loom>();
-                if (_instance == null) _instance = new GameObject("Loom").AddComponent<Loom>();
-                return _instance;
-            }
-        }
 
         public int QueuedItemCount
         {
@@ -200,28 +178,22 @@ namespace Library
 
         private void HandleConditional()
         {
-            // Lock the conditional and perform minimum amount of work
-            // so that we dont deadlock anything
             lock (_conditional)
             {
                 _currentConditional.Clear();
                 _currentConditional.AddRange(_conditional);
             }
-
-            // Work out which conditionals have met their condition
+            
             var toRemove = new List<ConditionalQueueItem>();
             foreach (var conditional in _currentConditional)
             {
-                // If the condition is met then return the task
                 if (conditional.condition())
                 {
                     conditional.tcs.SetResult(true);
                     toRemove.Add(conditional);
                 }
             }
-
-            // Once the condtition has been met it can be removed so that next 
-            // update it isnt checked again
+            
             lock (_conditional)
             {
                 foreach (var c in toRemove)

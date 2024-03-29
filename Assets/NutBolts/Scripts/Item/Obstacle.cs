@@ -2,6 +2,11 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using System;
+using NutBolts.Scripts;
+using NutBolts.Scripts.Assistant;
+using NutBolts.Scripts.Data;
+using NutBolts.Scripts.Item;
+
 public class Obstacle : MonoBehaviour
 {
     public Vector2 offset;
@@ -15,12 +20,10 @@ public class Obstacle : MonoBehaviour
 
     private float f;
     public Action<Obstacle> HitFloor;
-    //[HideInInspector]
     public List<ObstacleSide> obstacleSides;
-    //[HideInInspector]
     public ObstacleSide obstacleSide;
-    // Start is called before the first frame update
-    void Awake()
+
+    private void Awake()
     {
         isActive = true;
         attractRigid.isKinematic = true;
@@ -78,7 +81,7 @@ public class Obstacle : MonoBehaviour
             hingleJoint.connectedBody = screwRigidbody[i];
             keys.Add(key);
             hingleJoint2DList.Add(key.ToString(), hingleJoint);
-            var maskCircle = ContainAssistant.Instance.GetItem("circle", screwRigidbody[i].transform.position+Vector3.forward,Quaternion.identity);
+            var maskCircle = ItemsController.Instance.TakeItem("circle", screwRigidbody[i].transform.position+Vector3.forward,Quaternion.identity);
             maskCircle.transform.SetParent(transform, true);
             maskCircle.GetComponent<Circle>().Init(Index);
             maskCircleList.Add(maskCircle);
@@ -106,12 +109,7 @@ public class Obstacle : MonoBehaviour
         attractRigid.bodyType = RigidbodyType2D.Dynamic;
         UpdateObstacleSide();
     }
-   
-   
-    public void Activate()
-    {
-        attractRigid.isKinematic = false;
-    }
+
     public void ReleaseScrew(Screw sc) {
         UpdateObstacleSide();
         int key = -1;
@@ -131,12 +129,9 @@ public class Obstacle : MonoBehaviour
         }
         attractRigid.AddTorque(1f);       
     }
-    void repair()
-    {
-        attractRigid.drag = 1f;
-    }
-    Quaternion qua;
-    Vector3 euler;
+
+    private Quaternion qua;
+    private Vector3 euler;
     public void JointScrew(Screw sc,Vector3 pos)
     {
       
