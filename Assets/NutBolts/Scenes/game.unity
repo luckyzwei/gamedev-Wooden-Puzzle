@@ -231,9 +231,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b319f4de150fdc640957b82e05a42f04, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  background: {fileID: 1653671782}
-  foreground: {fileID: 1374360569}
-  cTarget: {fileID: 11400000, guid: b2a74dab303b91e48a4b1ccd276061aa, type: 2}
+  _bgSprite: {fileID: 1653671782}
+  _ground: {fileID: 1374360569}
+  _targetLevel: {fileID: 11400000, guid: b2a74dab303b91e48a4b1ccd276061aa, type: 2}
 --- !u!114 &325302264
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1606,15 +1606,6 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c97afc556caea1c44969477eb7ddec74, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  ConformX: 0
-  ConformY: 1
-  IgnoreYBottomIOS: 0
-  Logging: 0
-  isApply: 1
-  isScale: 1
-  OnApplySafeArea:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!95 &7188590216865395327
 Animator:
   serializedVersion: 5

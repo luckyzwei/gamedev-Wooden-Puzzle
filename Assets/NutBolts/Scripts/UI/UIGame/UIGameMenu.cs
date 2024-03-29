@@ -13,11 +13,11 @@ namespace NutBolts.Scripts.UI.UIGame
         [SerializeField] private TextMeshProUGUI _levelText;
         private void OnEnable()
         {
-            CLevelManager.OnWin += Wictory;
+            GameManager.OnWin += Wictory;
         }
         private void OnDisable()
         {
-            CLevelManager.OnWin -= Wictory;
+            GameManager.OnWin -= Wictory;
         }
         public override void Close()
         {
@@ -34,7 +34,7 @@ namespace NutBolts.Scripts.UI.UIGame
             _countDown.SetSeconds(seconds);
             _countDown.StartCountDown();
             _countDown.OnCountDownComplete = GameLose;
-            _levelText.text = $"LEVEL {CLevelManager.LEVEL}";
+            _levelText.text = $"LEVEL {GameManager.level}";
         
 
         }

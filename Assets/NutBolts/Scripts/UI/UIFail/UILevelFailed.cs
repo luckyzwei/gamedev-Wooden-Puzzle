@@ -10,7 +10,7 @@ namespace NutBolts.Scripts.UI.UIFail
             VKAudioController.Instance.PlaySound("Button");
             var uiGame = (UIGame.UIGameMenu)VKLayerController.Instance.GetLayer("UIGame");
             uiGame.Close();
-            CLevelManager.Instance.Reset();
+            GameManager.instance.Reset();
             VKLayerController.Instance.ShowLayer("UIMenu");
             Close();
         }
@@ -25,7 +25,7 @@ namespace NutBolts.Scripts.UI.UIFail
         public void Retry()
         {
             VKAudioController.Instance.PlaySound("Button");
-            CLevelManager.Instance.OnRetry();
+            GameManager.instance.OnReplayLevel();
             Close();
         }
     }

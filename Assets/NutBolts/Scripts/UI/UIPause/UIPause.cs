@@ -56,7 +56,7 @@ namespace NutBolts.Scripts.UI.UIPause
             VKAudioController.Instance.PlaySound("Button");
             var uiGame = (UIGame.UIGameMenu)VKLayerController.Instance.GetLayer("UIGame");
             uiGame.Close();
-            CLevelManager.Instance.Reset();
+            GameManager.instance.Reset();
             VKLayerController.Instance.ShowLayer("UIMenu");
             Close();
         }

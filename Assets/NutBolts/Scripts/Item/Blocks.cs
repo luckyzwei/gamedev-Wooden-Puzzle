@@ -175,11 +175,11 @@ namespace NutBolts.Scripts.Item
             {
                 _isActive = true;
                 gameObject.SetActive(true);
-                Side side = CLevelManager.Instance.GetSideById(ObstacleSide.id);
+                Side side = GameManager.instance.GetSideById(ObstacleSide.id);
                 if (side.prefabName != string.Empty)
                 {
                     side.dots = new List<int>(ObstacleSide.dots);
-                    CLevelManager.Instance.gameField.AddSide(side, side.id);
+                    GameManager.instance.Field.GenerateSide(side, side.id);
                 }
             }
 
@@ -199,7 +199,7 @@ namespace NutBolts.Scripts.Item
             foreach(int d in ObstacleSide.dots)
             {
                 var hingleJoint = gameObject.AddComponent<HingeJoint2D>();
-                var sc = CLevelManager.Instance.GetLit(d).Screw;
+                var sc = GameManager.instance.FindLit(d).Screw;
                 var p= transform.InverseTransformPoint(sc.transform.position);
                 hingleJoint.connectedBody = sc.rigidboy2D;
                 hingleJoint.connectedAnchor= p;

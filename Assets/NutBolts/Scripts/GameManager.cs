@@ -7,45 +7,42 @@ using NutBolts.Scripts.Item;
 using NutBolts.Scripts.Targets;
 using NutBolts.Scripts.UI.UIGame;
 using UnityEngine;
+using UnityEngine.Serialization;
 using VKSdk.Notify;
 using VKSdk.UI;
 
 namespace NutBolts.Scripts
 {
-    public class CLevelManager : MonoBehaviour
+    public class GameManager : MonoBehaviour
     {
         public delegate void GameStateEvents();
         public static event GameStateEvents OnEnterGame;
         public static event GameStateEvents OnWin;
-        public static bool FLAG_TOOLS;
-        public static bool FLAG_TIPS ;
-        public static int INDEX_TIPS;
-        public static int COLLECT;
-        public static int LEVEL = 1;
-        public static CLevelManager THIS;
-        public static CLevelManager Instance;
-        public SpriteRenderer background;
-        public SpriteRenderer foreground;
+        public static bool flagTools;
+        public static bool flagTips ;
+        public static int indexTips;
+        public static int collect;
+        public static int level = 1;
+        public static GameManager @this;
+        public static GameManager instance;
+        [SerializeField] private SpriteRenderer _bgSprite;
+        [SerializeField] private SpriteRenderer _ground;
+        [SerializeField] private CLevels _targetLevel;
+        public LevelObject LevelObject { get; private set; }
+        public GameBoard Field { get; private set; }
         
-        public LevelObject levelObject { get; private set; }
-    
-        public CLevels cTarget;
-  
-        public GameField gameField;
-   
-        private GameObject litFolder;
-        private GameObject itemFolder;
-
-        private Dictionary<string, Fire> lits;
-        private Dictionary<int,Blocks> obstacles;
-        private float litoffset = 0.66f;
+        private GameObject _litPrefab;
+        private GameObject _itemPrefab;
+        private Dictionary<string, Fire> _lits;
+        private Dictionary<int,Blocks> _obstacles;
+        private float _litOffset = 0.66f;
 
     
-        public GameState GameStatus { 
-            get => gameStatus;
+        public GameState Status { 
+            get => _gameStatus;
             set
             {
-                gameStatus = value;
+                _gameStatus = value;
                 if (value == GameState.Init)
                 {
                     if (PlayerPrefs.GetInt("OpenLevelTest") <= 0)
@@ -55,7 +52,7 @@ namespace NutBolts.Scripts
                     }
                     else
                     {
-                        THIS.GameStatus = GameState.PrepareGame;
+                        @this.Status = GameState.PrepareGame;
                         PlayerPrefs.SetInt("OpenLevelTest", 0);
                         PlayerPrefs.Save();
                     }
@@ -67,7 +64,7 @@ namespace NutBolts.Scripts
            
             }
         }
-        private GameState gameStatus;
+        private GameState _gameStatus;
         private void OnEnable()
         {
             OnWin += OnClose;
@@ -76,32 +73,30 @@ namespace NutBolts.Scripts
         {
             OnWin -= OnClose;
         }
-        void Start()
+
+        private void Start()
         {
-            Instance = this;
-            THIS = this;
-            GameStatus = GameState.Init;
+            instance = this;
+            @this = this;
+            Status = GameState.Init;
         }
 
-        public void LoadLevel()
+        public void ConstructLevel()
         {
-       
-            background.gameObject.SetActive(true);
-            LEVEL = PlayerPrefs.GetInt("OpenLevel");
-            if (LEVEL == 0)
+            _bgSprite.gameObject.SetActive(true);
+            level = PlayerPrefs.GetInt("OpenLevel");
+            if (level == 0)
             {
-                LEVEL = 1;
+                level = 1;
                 DataMono.Instance.Data.Level = 1;
                 DataMono.Instance.SaveAll();
             }     
-            LoadDataFromLocal(LEVEL);
-        
-        
+            LoadDataFromLocal(level);
         }
 
         private void PrepairGame()
         {
-            Initial(levelObject);
+            Initial(LevelObject);
         }
 
         private void LoadDataFromLocal(int currentLevel)
@@ -111,27 +106,27 @@ namespace NutBolts.Scripts
             {
                 mapText = Resources.Load("Level/" + currentLevel) as TextAsset;
             }
-            levelObject = JsonUtility.FromJson<LevelObject>(mapText.text);
-            cTarget = Resources.Load("Target/Level" + currentLevel) as CLevels;
-            if (cTarget == null)
+            LevelObject = JsonUtility.FromJson<LevelObject>(mapText.text);
+            _targetLevel = Resources.Load("Target/Level" + currentLevel) as CLevels;
+            if (_targetLevel == null)
             {
-                cTarget = Resources.Load("Target/Level" + currentLevel) as CLevels;
+                _targetLevel = Resources.Load("Target/Level" + currentLevel) as CLevels;
             }
         }
 
         private void Initial(LevelObject levelObject)
         {
-            gameField = new GameField(levelObject);
-            this.levelObject = levelObject;
+            Field = new GameBoard(levelObject);
+            this.LevelObject = levelObject;
             GenerateBg();
             GenerateLit();
             Invoke("GenerateItem", 0.1f);
-            Invoke("CompleteLoadLevel", 0.5f);
+            Invoke("LoadLevelCompleted", 0.5f);
             var uiGame =(UIGameMenu) VKLayerController.Instance.ShowLayer("UIGame");
             int second=300;
-            if (cTarget.targets.Length > 1)
+            if (_targetLevel.targets.Length > 1)
             {
-                second = cTarget.targets[1].amount;
+                second = _targetLevel.targets[1].amount;
             }
             uiGame.Construct(second);
             OnEnterGame?.Invoke();
@@ -139,48 +134,48 @@ namespace NutBolts.Scripts
 
         private void GenerateBg()
         {
-            foreground.gameObject.SetActive(true);
+            _ground.gameObject.SetActive(true);
       
-            background.transform.position = Vector3.zero;
-            foreground.transform.position = Vector3.zero;
+            _bgSprite.transform.position = Vector3.zero;
+            _ground.transform.position = Vector3.zero;
         }
 
         private void GenerateLit()
         {
-            litFolder = new GameObject();
-            litFolder.name = "Lits";
+            _litPrefab = new GameObject();
+            _litPrefab.name = "Lits";
             GameObject o;
             Fire s;
             Vector3 position;      
-            lits = new Dictionary<string, Fire>();
-            for (int y = 0; y < gameField.H; y++)
-            for (int x = 0; x < gameField.W; x++)
+            _lits = new Dictionary<string, Fire>();
+            for (int y = 0; y < Field.Height; y++)
+            for (int x = 0; x < Field.Width; x++)
             {
-                if (gameField.s[y, x] >= 1)
+                if (Field.boadMatrix[y, x] >= 1)
                 {
                     position = new Vector3();
-                    position.x = -litoffset * (0.5f * (gameField.W - 1) - x);
-                    position.y = -litoffset * (-0.5f * (gameField.H - 1) + y);
+                    position.x = -_litOffset * (0.5f * (Field.Width - 1) - x);
+                    position.y = -_litOffset * (-0.5f * (Field.Height - 1) + y);
                     o = ItemsController.Instance.TakeItem("LitEmpty", position);
                     o.name = "Lit_" + y + "x" + x;
-                    o.transform.parent = litFolder.transform;
+                    o.transform.parent = _litPrefab.transform;
                     s = o.GetComponent<Fire>();
-                    s.iIndex = y * gameField.W + x;
+                    s.iIndex = y * Field.Width + x;
                     
                     
                     
-                    if (gameField.s[y, x] <= 4 )
+                    if (Field.boadMatrix[y, x] <= 4 )
                     {
-                        ScrewHole h = GetNewHole(position, s.iIndex);
+                        ScrewHole h = SpawnHole(position, s.iIndex);
                         h.transform.SetParent(s.transform, true);
                         h.Lit = s;
 
-                        Screw sc = GetNewScrew(position, s.iIndex);
+                        Screw sc = ScrewTake(position, s.iIndex);
                         sc.transform.SetParent(s.transform, true);
                         s.Screw = sc;
                         sc.onMove += OnMoveToLit;
                         sc.Lit = s;
-                        if (gameField.s[y, x] == 1)
+                        if (Field.boadMatrix[y, x] == 1)
                         {
                             sc.Activate();
                         }
@@ -190,45 +185,45 @@ namespace NutBolts.Scripts
                         }
                     }
                     
-                    lits.Add(y + "x" + x, s);
+                    _lits.Add(y + "x" + x, s);
                 }
             }
         }
 
         private void GenerateItem()
         {
-            itemFolder = new GameObject("Items");
-            if (obstacles == null)
+            _itemPrefab = new GameObject("Items");
+            if (_obstacles == null)
             {
-                obstacles = new Dictionary<int, Blocks>();
+                _obstacles = new Dictionary<int, Blocks>();
             }
-            obstacles.Clear();
-            for(int i=0; i<gameField.sides.Count; i++)
+            _obstacles.Clear();
+            for(int i=0; i<Field.Sides.Count; i++)
             {
                 var pos = Vector2.zero;
                 Vector2 start;
                 Vector2 second;
                 Vector2 end;
                 float maxC = -10000f;
-                int C = gameField.sides[i].dots.Count;
-                float degreeRot = (float)gameField.sides[i].rotBlockDegree;
-                start = GetLit(gameField.sides[i].dots[0]).transform.position;
+                int C = Field.Sides[i].dots.Count;
+                float degreeRot = (float)Field.Sides[i].rotBlockDegree;
+                start = FindLit(Field.Sides[i].dots[0]).transform.position;
                 if (C < 2)
                 {
                     second = start;
                 }
                 else
                 {
-                    second = GetLit(gameField.sides[i].dots[1]).transform.position;
+                    second = FindLit(Field.Sides[i].dots[1]).transform.position;
                 }          
             
                 Vector3 dir = (second - start);
                 float angle = Vector2.Angle(Vector2.up,dir);
                 Vector3 cross = Vector3.Cross(Vector3.up, (Vector3)dir).normalized;
            
-                Blocks o = ItemsController.Instance.TakeItem<Blocks>(gameField.sides[i].prefabName);
+                Blocks o = ItemsController.Instance.TakeItem<Blocks>(Field.Sides[i].prefabName);
                 o.name = "Item_" + i.ToString();
-                o.transform.SetParent(itemFolder.transform, true);
+                o.transform.SetParent(_itemPrefab.transform, true);
                 bool oneDirect = (!o._xScale || !o._yScale) && (o._yScale || o._xScale);
                 if (oneDirect)
                 {
@@ -236,14 +231,14 @@ namespace NutBolts.Scripts
                 }
                 else
                 {
-                    o.transform.localEulerAngles = new Vector3(0, 0, gameField.sides[i].rotBlockDegree);
+                    o.transform.localEulerAngles = new Vector3(0, 0, Field.Sides[i].rotBlockDegree);
                 }
                 end = start;
                 List<Rigidbody2D> rigids = new List<Rigidbody2D>();
                 for (int j = 0; j < C; j++)
                 {
 
-                    var s = GetLit(gameField.sides[i].dots[j]);
+                    var s = FindLit(Field.Sides[i].dots[j]);
                     pos += (Vector2)s.transform.position;
                     if (s.Screw)
                     {
@@ -259,25 +254,25 @@ namespace NutBolts.Scripts
                
                 }
 
-                var head = Mathf.Max(gameField.sides[i].Head, 1);
-                var tail = Mathf.Max(gameField.sides[i].Tail, 1);
-                pos = pos / ((float)(gameField.sides[i].dots.Count))+o.Offset;         
+                var head = Mathf.Max(Field.Sides[i].Head, 1);
+                var tail = Mathf.Max(Field.Sides[i].Tail, 1);
+                pos = pos / ((float)(Field.Sides[i].dots.Count))+o.Offset;         
                 o.transform.position = pos;
             
                 float length = (end-start).magnitude + tail /2+head/2;
-                o.Construct(gameField.sides[i],rigids,length,i,dir.normalized,head,tail);
-                o.OnFloorHit += OnBarHitFloor;
+                o.Construct(Field.Sides[i],rigids,length,i,dir.normalized,head,tail);
+                o.OnFloorHit += BarHit;
            
             
-                obstacles.Add(i+1, o);           
+                _obstacles.Add(i+1, o);           
             }
         }
 
         private void OnMoveToLit(Screw sc,ScrewHole h)
         {
-            string move=string.Format("{0}_{1}:{2}",gameField.Histories.Count, sc.Lit.iIndex, h.Lit.iIndex);
-            gameField.UpdateHistories(move);
-            foreach(var obstacle in obstacles.Values)       
+            string move=string.Format("{0}_{1}:{2}",Field.Histories.Count, sc.Lit.iIndex, h.Lit.iIndex);
+            Field.HistoryNew(move);
+            foreach(var obstacle in _obstacles.Values)       
             {
                 obstacle.Save();
             }
@@ -290,22 +285,22 @@ namespace NutBolts.Scripts
             });
         }
 
-        private Fire GetLit(int y, int x)
+        private Fire FindLit(int y, int x)
         {
-            if (lits.ContainsKey(y + "x" + x))
+            if (_lits.ContainsKey(y + "x" + x))
             {
-                return lits[y + "x" + x];
+                return _lits[y + "x" + x];
             }
             return null;
         }
-        public Fire GetLit(int iIndex)
+        public Fire FindLit(int iIndex)
         {
-            int x = iIndex % gameField.W;
-            int y = iIndex / gameField.W;
-            return GetLit(y, x);
+            int x = iIndex % Field.Width;
+            int y = iIndex / Field.Width;
+            return FindLit(y, x);
         }
 
-        private Screw GetNewScrew( Vector3 pos, int id)
+        private Screw ScrewTake( Vector3 pos, int id)
         {
             GameObject o = ItemsController.Instance.TakeItem("screw");
             o.transform.position = pos;
@@ -315,7 +310,7 @@ namespace NutBolts.Scripts
             return screw;
         }
 
-        private ScrewHole GetNewHole(Vector3 pos, int id)
+        private ScrewHole SpawnHole(Vector3 pos, int id)
         {
             GameObject o = ItemsController.Instance.TakeItem("hole");
             o.transform.position = pos;
@@ -324,22 +319,22 @@ namespace NutBolts.Scripts
             return h;
         }
 
-        private void RemovePopulation()
+        private void RemovePeoplePopulation()
         {
             _collects.Clear();
-            foreground.gameObject.SetActive(false);
-            if (litFolder) Destroy(litFolder);
-            if (itemFolder) Destroy(itemFolder);
-            FLAG_TIPS = false;
-            FLAG_TOOLS = false;
-            INDEX_TIPS = 0;
-            COLLECT = 0;
+            _ground.gameObject.SetActive(false);
+            if (_litPrefab) Destroy(_litPrefab);
+            if (_itemPrefab) Destroy(_itemPrefab);
+            flagTips = false;
+            flagTools = false;
+            indexTips = 0;
+            collect = 0;
         
         }
-        void CompleteLoadLevel()
+
+        private void LoadLevelCompleted()
         {
             VKLayerController.Instance.HideLoading();
-        
         }
         public void NextLevelCompleted()
         {
@@ -347,8 +342,8 @@ namespace NutBolts.Scripts
         }
         public void Reset()
         {
-            foreground.gameObject.SetActive(false);
-            RemovePopulation();
+            _ground.gameObject.SetActive(false);
+            RemovePeoplePopulation();
         }
 
         private int _dem = 0;
@@ -367,17 +362,17 @@ namespace NutBolts.Scripts
 
         private readonly List<string> _collects = new ();
 
-        private void OnBarHitFloor(Blocks obstacle)
+        private void BarHit(Blocks obstacle)
         {
             if (_collects.Contains(obstacle.name)) return;
             _collects.Add(obstacle.name);
-            COLLECT++;
-            if (COLLECT >= cTarget.targets[0].amount)
+            collect++;
+            if (collect >= _targetLevel.targets[0].amount)
             {
                 if (PlayerPrefs.GetInt("OpenTipTest") != 0)
                 {
                     PlayerPrefs.SetInt("OpenTipTest", 0);
-                    SaveTip();
+                    TipStore();
                     ItemController.Instance.Construct();
                 }
                 if (OnWin != null)
@@ -389,81 +384,82 @@ namespace NutBolts.Scripts
            
             }
             VKSdk.VKAudioController.Instance.PlaySound("Drop");
-            StartCoroutine(WaitForRemove(obstacle));
+            StartCoroutine(RemoveTimer(obstacle));
         }
-        IEnumerator WaitForRemove(Blocks obstacle)
+
+        private IEnumerator RemoveTimer(Blocks obstacle)
         {
             yield return new WaitUntil(() => ItemController.Instance._screwState == ScrewState.Waiting);
-            gameField.RemoveSide(obstacle.ObstacleSide.id);
+            Field.RemoveSide(obstacle.ObstacleSide.id);
         }
-        public void OnPreviouseMove()
+        public void OnMove()
         {
-            if (gameField.moves.Count == 0)
+            if (Field.Moves.Count == 0)
             {
-                gameField = new GameField(levelObject);
+                Field = new GameBoard(LevelObject);
                 VKNotifyController.Instance.AddNotify("Previous is empty",
                     VKNotifyController.TypeNotify.Error);
                 return;
             }
-            string move = gameField.moves[gameField.moves.Count - 1];
+            string move = Field.Moves[Field.Moves.Count - 1];
        
             string[] tmp = move.Split('_');
             string[] Arr = tmp[1].Split(':');
             int begin = int.Parse(Arr[0]);
             int end = int.Parse(Arr[1]);
-            gameField.UpdateBoard(begin, CSquare.Nut);
-            gameField.UpdateBoard(end, CSquare.Hole);
-            GetLit(begin).Screw.Activate();
-            GetLit(end).Screw.MakeNotActive();
-            foreach(var pair in obstacles)
+            Field.BoadNew(begin, CSquare.Nut);
+            Field.BoadNew(end, CSquare.Hole);
+            FindLit(begin).Screw.Activate();
+            FindLit(end).Screw.MakeNotActive();
+            foreach(var pair in _obstacles)
             {
-                if (gameField.CheckIsExistSide(move, pair.Key))
+                if (Field.SideCheck(move, pair.Key))
                 {
                     pair.Value.PositionBefore();
                 }
             }
-            COLLECT = cTarget.targets[0].amount - FindObjectsOfType<Blocks>().Length;
+            collect = _targetLevel.targets[0].amount - FindObjectsOfType<Blocks>().Length;
             ItemController.Instance.Control();
-            gameField.moves.RemoveAt(gameField.moves.Count - 1);
-            gameField.Histories.Remove(move);
+            Field.Moves.RemoveAt(Field.Moves.Count - 1);
+            Field.Histories.Remove(move);
         
         }
-        public void NextLevel()
+        public void LoadNextLevel()
         {
             Reset();
-            LEVEL++;
-            PlayerPrefs.SetInt("OpenLevel", LEVEL);
-            LoadLevel();
-            GameStatus = GameState.PrepareGame;
+            level++;
+            PlayerPrefs.SetInt("OpenLevel", level);
+            ConstructLevel();
+            Status = GameState.PrepareGame;
             VKLayerController.Instance.ShowLoading();
             Invoke("NextLevelCompleted",0.3f);
         }
-        public void OnPlayTip()
+        public void PlayTip()
         {
-            RemovePopulation();
-            LoadLevel();
+            RemovePeoplePopulation();
+            ConstructLevel();
             VKLayerController.Instance.ShowLoading();
-            GameStatus = GameState.PrepareGame;
-            Invoke("ReturnTip", 0.5f);
+            Status = GameState.PrepareGame;
+            Invoke("TipRevert", 0.5f);
         }
-        public void OnBoosterReset()
+        public void ResetAllBusters()
         {
-            OnRetry();
+            OnReplayLevel();
         }
-        public void OnRetry()
+        public void OnReplayLevel()
         {
             var uiGame = VKLayerController.Instance.GetLayer("UIGame");
             uiGame.Close();
-            RemovePopulation();
-            LoadLevel();
+            RemovePeoplePopulation();
+            ConstructLevel();
             VKLayerController.Instance.ShowLoading();
-            GameStatus = GameState.PrepareGame;
-            Invoke("CompleteLoadLevel", 0.5f);
+            Status = GameState.PrepareGame;
+            Invoke("LoadLevelCompleted", 0.5f);
         }
         public void OnTool()
         {
-            FLAG_TOOLS = true;
-            foreach(var lit in lits.Values)
+            flagTools = true;
+            foreach(var lit in _lits.Values)
             {
                 if (lit.Screw)
                 {
@@ -471,10 +467,10 @@ namespace NutBolts.Scripts
                 }
             }
         }
-        public void TurnOffTool()
+        public void DisableTool()
         {
-            FLAG_TOOLS = false;
-            foreach (var lit in lits.Values)
+            flagTools = false;
+            foreach (var lit in _lits.Values)
             {
                 if (lit.Screw)
                 {
@@ -482,23 +478,24 @@ namespace NutBolts.Scripts
                 }
             }
         }
-        void ReturnTip()
+
+        private void TipRevert()
         {      
-            FLAG_TIPS = true;
-            INDEX_TIPS = 0;
-            Fire lit = GetLit(levelObject.tipPaths[INDEX_TIPS]);
+            flagTips = true;
+            indexTips = 0;
+            Fire lit = FindLit(LevelObject.tipPaths[indexTips]);
             lit.IsActive = true;
         }
         public void OnNextTip()
         {       
-            foreach(var l in lits.Values)
+            foreach(var l in _lits.Values)
             {
                 l.IsActive = false;
             }
-            INDEX_TIPS++;
-            if (INDEX_TIPS < levelObject.tipPaths.Count)
+            indexTips++;
+            if (indexTips < LevelObject.tipPaths.Count)
             {
-                var lit = GetLit(levelObject.tipPaths[INDEX_TIPS]);
+                var lit = FindLit(LevelObject.tipPaths[indexTips]);
                 if (lit)
                 {
                     lit.IsActive = true;
@@ -506,17 +503,16 @@ namespace NutBolts.Scripts
             }
         }
 
-        private void SaveTip()
+        private void TipStore()
         {
-            int length = levelObject.tipPaths.Count;
+            int length = LevelObject.tipPaths.Count;
             List<int> History = ItemController.Instance.Histories;
             if (History.Count < length || length==0)
             {
-                levelObject.tipPaths = new List<int>(History);
-                string jsonStr = JsonUtility.ToJson(levelObject);
+                LevelObject.tipPaths = new List<int>(History);
+                string jsonStr = JsonUtility.ToJson(LevelObject);
                 if (Application.platform == RuntimePlatform.OSXEditor || Application.platform == RuntimePlatform.WindowsEditor)
                 {
-                    //Write to file
                     string activeDir = Application.dataPath + @"/NutBolts/Resources/Level/";
                     string newPath = System.IO.Path.Combine(activeDir, PlayerPrefs.GetInt("OpenLevel") + ".txt");
                     StreamWriter sw = new StreamWriter(newPath);
@@ -526,42 +522,10 @@ namespace NutBolts.Scripts
            
             }
         }
-        public bool CheckIsExistTip(Fire l)
-        {
-            if (levelObject == null) return false;
-            if (levelObject.tipPaths == null) return false;
-            if (levelObject.tipPaths.Count == 0) return false;
-            if (!levelObject.tipPaths.Contains(l.iIndex))
-            {
-                VKNotifyController.Instance.AddNotify("You did not follow tips which breaks the path to win the level",
-                    VKNotifyController.TypeNotify.Error);
-                return false;
-            }
-            if (levelObject.tipPaths.IndexOf(l.iIndex) != CLevelManager.INDEX_TIPS)
-            {
-                VKNotifyController.Instance.AddNotify("You did not follow tips which breaks the path to win the level",
-                    VKNotifyController.TypeNotify.Error);
-                return false;
-            }
-            return true;
-        }
-        public void ClickCoinHole(ScrewHole h)
-        {
-            if (DataMono.Instance.Data.Coins >= 100)
-            {
-                DataMono.Instance.Data.Coins -= 100;
-                DataMono.Instance.SaveAll();
-                VKNotifyController.Instance.AddNotify("-100 coin.", VKNotifyController.TypeNotify.Normal);
-           
-            }
-            else
-            {
-                VKNotifyController.Instance.AddNotify("Not enough coin.", VKNotifyController.TypeNotify.Error);
-            }
-        }
+    
         public Side GetSideById(int id)
         {
-            foreach(var side in levelObject.sides)
+            foreach(var side in LevelObject.sides)
             {
                 if (side.id == id)
                 {
@@ -572,74 +536,75 @@ namespace NutBolts.Scripts
         }
     
     }
-    public class GameField
+    public class GameBoard
     {
-        public int W;
-        public int H;
-        public int[,] s;
-        public List<Side> sides;
-        public Dictionary<string,int[]> Histories;
-        public List<string> moves;
-        public GameField(LevelObject levelObj)
+        public int Width { get;}
+        public int Height { get; }
+        public int[,] boadMatrix  { get; }
+        public List<Side> Sides { get; }
+        public Dictionary<string,int[]> Histories { get; }
+        public List<string> Moves { get; }
+        public GameBoard(LevelObject levelObj)
         {
-            W = levelObj.maxCol;
-            H = levelObj.maxRow;
-            s = new int[H, W];
-            for(int y=0; y<H; y++)
-            for(int x=0; x<W; x++)
+            Width = levelObj.maxCol;
+            Height = levelObj.maxRow;
+            boadMatrix = new int[Height, Width];
+            for(int y=0; y<Height; y++)
+            for(int x=0; x<Width; x++)
             {
-                s[y, x] = levelObj.nuts[y * W + x];
+                boadMatrix[y, x] = levelObj.nuts[y * Width + x];
             }
-            sides = new List<Side>();
+            Sides = new List<Side>();
             for(int i=0; i<levelObj.sides.Count; i++)
             {
                 levelObj.sides[i].id = i + 1;
-                sides.Add(levelObj.sides[i]);         
+                Sides.Add(levelObj.sides[i]);         
             }
 
             Histories = new Dictionary<string, int[]>();
-            moves = new List<string>();
+            Moves = new List<string>();
         }
         public void RemoveSide(int iIndex)
         {
-            for(int i=0; i<sides.Count; i++)
+            for(int i=0; i<Sides.Count; i++)
             {
-                if (sides[i].id == iIndex)
+                if (Sides[i].id == iIndex)
                 {
-                    sides.RemoveAt(i);
+                    Sides.RemoveAt(i);
                     break;
                 }
             }
         }
-        public void AddSide(Side side ,int iIndex)
+        public void GenerateSide(Side side ,int iIndex)
         {
-            for (int i = 0; i < sides.Count; i++)
+            foreach (var sie in Sides)
             {
-                if (sides[i].id == iIndex)
+                if (sie.id == iIndex)
                 {
                     return;
                 }
             }
-            sides.Add(side);
+
+            Sides.Add(side);
         }
-        public void UpdateHistories(string newMove)
+        public void HistoryNew(string newMove)
         {
-            moves.Add(newMove);
-            var arr = new int[sides.Count];
-            for(int i=0; i<sides.Count; i++)
+            Moves.Add(newMove);
+            var arr = new int[Sides.Count];
+            for(int i=0; i<Sides.Count; i++)
             {
-                arr[i] = sides[i].id;
+                arr[i] = Sides[i].id;
             }
             Histories.Add(newMove, arr);
         }
-        public void UpdateBoard(int iIndex, CSquare cSquare)
+        public void BoadNew(int iIndex, CSquare cSquare)
         {
-            int x = iIndex % this.W;
-            int y = iIndex / this.W;
-            s[y, x] = (int)cSquare;
+            int x = iIndex % this.Width;
+            int y = iIndex / this.Width;
+            boadMatrix[y, x] = (int)cSquare;
         }
 
-        public bool CheckIsExistSide(string id, int iIndex)
+        public bool SideCheck(string id, int iIndex)
         {
             foreach(int element in (int[])Histories[id])
             {

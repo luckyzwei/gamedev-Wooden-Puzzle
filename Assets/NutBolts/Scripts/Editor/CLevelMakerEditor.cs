@@ -794,8 +794,8 @@ namespace NutBolts.Scripts.Editor
             targetEdit = false;
             PlayerPrefs.DeleteAll();
             SaveLevel();
-            CLevelManager.COLLECT = 0;
-            CLevelManager lm = Camera.main.GetComponent<CLevelManager>();
+            GameManager.collect = 0;
+            GameManager lm = Camera.main.GetComponent<GameManager>();
             PlayerPrefs.SetInt("OpenLevelTest", levelNumber);
             PlayerPrefs.SetInt("OpenLevel", levelNumber);
             PlayerPrefs.SetInt("OpenTipTest", levelNumber);
@@ -806,7 +806,7 @@ namespace NutBolts.Scripts.Editor
             else
                 EditorApplication.isPlaying = true;
 
-            lm.LoadLevel();
+            lm.ConstructLevel();
         }
         private void OpenTarget()
         {

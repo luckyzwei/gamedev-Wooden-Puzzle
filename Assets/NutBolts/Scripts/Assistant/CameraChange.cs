@@ -14,12 +14,12 @@ namespace NutBolts.Scripts.Assistant
         private readonly float _maxX = 3.6f;
         private void OnEnable()
         {
-            CLevelManager.OnEnterGame += ChangeAspect;
+            GameManager.OnEnterGame += ChangeAspect;
         }
 
         private void OnDisable()
         {
-            CLevelManager.OnEnterGame -= ChangeAspect;
+            GameManager.OnEnterGame -= ChangeAspect;
         }
 
         private void ChangeAspect()
@@ -29,8 +29,8 @@ namespace NutBolts.Scripts.Assistant
 
         private IEnumerator DelayRoutine()
         {
-            yield return new WaitWhile(() => !CLevelManager.THIS);
-            if (CLevelManager.THIS.GameStatus == GameState.PrepareGame)
+            yield return new WaitWhile(() => !GameManager.@this);
+            if (GameManager.@this.Status == GameState.PrepareGame)
             {
                 _height = _maxY - _minY ;
                 _width = _maxX - _minX;

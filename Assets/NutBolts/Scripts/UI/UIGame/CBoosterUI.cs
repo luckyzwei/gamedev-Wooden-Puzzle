@@ -53,19 +53,19 @@ namespace NutBolts.Scripts.UI.UIGame
         }
         private void OnReset()
         {
-            CLevelManager.Instance.OnBoosterReset();
+            GameManager.instance.ResetAllBusters();
         }
         private void OnTips()
         {
-            CLevelManager.Instance.OnPlayTip();
+            GameManager.instance.PlayTip();
         }
         private void OnTool()
         {
-            CLevelManager.Instance.OnTool();
+            GameManager.instance.OnTool();
         }
         private void OnPrevious()
         {
-            CLevelManager.Instance.OnPreviouseMove();
+            GameManager.instance.OnMove();
         }
 
         private void ResetBooster()

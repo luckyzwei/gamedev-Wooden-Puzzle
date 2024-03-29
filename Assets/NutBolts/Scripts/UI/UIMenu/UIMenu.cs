@@ -43,8 +43,8 @@ namespace NutBolts.Scripts.UI.UIMenu
             VKAudioController.Instance.PlaySound("Button");
             VKLayerController.Instance.ShowLoading();
             PlayerPrefs.SetInt("OpenLevel", levelIndex);
-            CLevelManager.Instance.LoadLevel();
-            CLevelManager.THIS.GameStatus = GameState.PrepareGame;
+            GameManager.instance.ConstructLevel();
+            GameManager.@this.Status = GameState.PrepareGame;
             Close();
         }
         public void OpenSettings()

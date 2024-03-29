@@ -22,7 +22,7 @@ namespace NutBolts.Scripts.UI.UIWin
         public void OpenNextLevel()
         {
             VKAudioController.Instance.PlaySound("Button");
-            CLevelManager.Instance.NextLevel();
+            GameManager.instance.LoadNextLevel();
             Close();
         }
         public void HomeButton() //TODO fix
@@ -30,15 +30,15 @@ namespace NutBolts.Scripts.UI.UIWin
             VKAudioController.Instance.PlaySound("Button");
             var uiGame = (UIGame.UIGameMenu)VKLayerController.Instance.GetLayer("UIGame");
             uiGame.Close();
-            CLevelManager.Instance.Reset();
+            GameManager.instance.Reset();
             VKLayerController.Instance.ShowLayer("UIMenu");
             Close();
         }
         public void Construct()
         {
-            _levelObj = CLevelManager.Instance.levelObject;
+            _levelObj = GameManager.instance.LevelObject;
         
-            _levelText.text = string.Format("Level {0}", CLevelManager.LEVEL);
+            _levelText.text = string.Format("Level {0}", GameManager.level);
             _scroll.RecycleAll();
             _scroll.OnWidth += OnWidthChange;
             _scroll.OnFill += AddReward;

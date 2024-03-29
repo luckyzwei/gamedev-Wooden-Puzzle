@@ -143,9 +143,9 @@ namespace NutBolts.Scripts.Assistant
                 _selectScrew.StopWaiting();
                 _selectScrew = null;
             }
-            if (CLevelManager.FLAG_TIPS)
+            if (GameManager.flagTips)
             {
-                CLevelManager.INDEX_TIPS--;
+                GameManager.indexTips--;
             }
         }
         public void Construct()
@@ -155,20 +155,20 @@ namespace NutBolts.Scripts.Assistant
 
         private void UseBuster(Fire l)
         {
-            if (CLevelManager.FLAG_TOOLS)
+            if (GameManager.flagTools)
             {
                 if (l.Screw)
                 {
                     l.Screw.ReleaseScre();
                     l.Screw.MakeNotActive();
-                    CLevelManager.Instance.TurnOffTool();
+                    GameManager.instance.DisableTool();
                     _selectScrew = null;
                 }
             }
-            if (CLevelManager.FLAG_TIPS)
+            if (GameManager.flagTips)
             {
 
-                CLevelManager.Instance.OnNextTip();
+                GameManager.instance.OnNextTip();
             }
         }
 
