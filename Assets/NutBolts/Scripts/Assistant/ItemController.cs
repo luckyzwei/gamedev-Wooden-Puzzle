@@ -106,7 +106,7 @@ namespace NutBolts.Scripts.Assistant
             _screwState = ScrewState.Normal;
             UseBuster(height.Lit);
             SaveTip(screw, height);
-            screw.OnMove(screw, height);
+            screw.onMove.Invoke(screw, height);
             Shake();
             _screwState = ScrewState.Normal;
             _selectScrew = null;
@@ -117,24 +117,22 @@ namespace NutBolts.Scripts.Assistant
             if (_selectScrew == null)
             {
                 _selectScrew = screw;
-                _selectScrew.OnWait();
+                _selectScrew.StartWaiting();
                 _screwState = ScrewState.Waiting;
-                UseBuster(screw.GetLit());
+                UseBuster(screw.Lit);
             }      
             else
             {
-                if (_selectScrew.GetLit().iIndex != screw.GetLit().iIndex)
+                if (_selectScrew.Lit.iIndex != screw.Lit.iIndex)
                 {
-                    _selectScrew.DeWait();
+                    _selectScrew.StopWaiting();
                 
                 }
                 _selectScrew = screw;
-                screw.OnWait();
+                screw.StartWaiting();
                 _screwState = ScrewState.Waiting;
-                UseBuster(screw.GetLit());
+                UseBuster(screw.Lit);
             }
-       
-
         }
 
         private void PlaceBackScrew()
@@ -142,7 +140,7 @@ namespace NutBolts.Scripts.Assistant
             if (_selectScrew)
             {
                 _screwState = ScrewState.Normal;
-                _selectScrew.DeWait();
+                _selectScrew.StopWaiting();
                 _selectScrew = null;
             }
             if (CLevelManager.FLAG_TIPS)
@@ -155,14 +153,14 @@ namespace NutBolts.Scripts.Assistant
             Histories = new List<int>();
         }
 
-        private void UseBuster(Lit l)
+        private void UseBuster(Fire l)
         {
             if (CLevelManager.FLAG_TOOLS)
             {
                 if (l.Screw)
                 {
-                    l.Screw.OnRelease();
-                    l.Screw.DeActivate();
+                    l.Screw.ReleaseScre();
+                    l.Screw.MakeNotActive();
                     CLevelManager.Instance.TurnOffTool();
                     _selectScrew = null;
                 }
@@ -178,7 +176,7 @@ namespace NutBolts.Scripts.Assistant
         {
             if (PlayerPrefs.GetInt("OpenTipTest", 0) != 0)
             {
-                Histories.Add(screw.GetLit().iIndex);
+                Histories.Add(screw.Lit.iIndex);
                 Histories.Add(height.Lit.iIndex);
 
             }       

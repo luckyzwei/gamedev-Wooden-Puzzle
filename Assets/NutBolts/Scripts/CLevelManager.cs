@@ -36,8 +36,8 @@ namespace NutBolts.Scripts
         private GameObject litFolder;
         private GameObject itemFolder;
 
-        private Dictionary<string, Lit> lits;
-        private Dictionary<int,Obstacle> obstacles;
+        private Dictionary<string, Fire> lits;
+        private Dictionary<int,Blocks> obstacles;
         private float litoffset = 0.66f;
 
     
@@ -150,9 +150,9 @@ namespace NutBolts.Scripts
             litFolder = new GameObject();
             litFolder.name = "Lits";
             GameObject o;
-            Lit s;
+            Fire s;
             Vector3 position;      
-            lits = new Dictionary<string, Lit>();
+            lits = new Dictionary<string, Fire>();
             for (int y = 0; y < gameField.H; y++)
             for (int x = 0; x < gameField.W; x++)
             {
@@ -164,7 +164,7 @@ namespace NutBolts.Scripts
                     o = ItemsController.Instance.TakeItem("LitEmpty", position);
                     o.name = "Lit_" + y + "x" + x;
                     o.transform.parent = litFolder.transform;
-                    s = o.GetComponent<Lit>();
+                    s = o.GetComponent<Fire>();
                     s.iIndex = y * gameField.W + x;
                     
                     
@@ -178,15 +178,15 @@ namespace NutBolts.Scripts
                         Screw sc = GetNewScrew(position, s.iIndex);
                         sc.transform.SetParent(s.transform, true);
                         s.Screw = sc;
-                        sc.OnMove += OnMoveToLit;
-                        sc.SetLit(s);
+                        sc.onMove += OnMoveToLit;
+                        sc.Lit = s;
                         if (gameField.s[y, x] == 1)
                         {
                             sc.Activate();
                         }
                         else
                         {
-                            sc.DeActivate();
+                            sc.MakeNotActive();
                         }
                     }
                     
@@ -200,7 +200,7 @@ namespace NutBolts.Scripts
             itemFolder = new GameObject("Items");
             if (obstacles == null)
             {
-                obstacles = new Dictionary<int, Obstacle>();
+                obstacles = new Dictionary<int, Blocks>();
             }
             obstacles.Clear();
             for(int i=0; i<gameField.sides.Count; i++)
@@ -226,10 +226,10 @@ namespace NutBolts.Scripts
                 float angle = Vector2.Angle(Vector2.up,dir);
                 Vector3 cross = Vector3.Cross(Vector3.up, (Vector3)dir).normalized;
            
-                Obstacle o = ItemsController.Instance.TakeItem<Obstacle>(gameField.sides[i].prefabName);
+                Blocks o = ItemsController.Instance.TakeItem<Blocks>(gameField.sides[i].prefabName);
                 o.name = "Item_" + i.ToString();
                 o.transform.SetParent(itemFolder.transform, true);
-                bool oneDirect = (!o.ScaleX || !o.ScaleY) && (o.ScaleY || o.ScaleX);
+                bool oneDirect = (!o._xScale || !o._yScale) && (o._yScale || o._xScale);
                 if (oneDirect)
                 {
                     o.transform.eulerAngles = cross * angle;
@@ -248,7 +248,7 @@ namespace NutBolts.Scripts
                     if (s.Screw)
                     {
                         rigids.Add(s.Screw.rigidboy2D);
-                        s.Screw.SetJoints(o);
+                        s.Screw.AssignJoints(o);
                     }
                     if (Vector2.Distance(start, (Vector2)s.transform.position)>maxC)
                     {
@@ -261,12 +261,12 @@ namespace NutBolts.Scripts
 
                 var head = Mathf.Max(gameField.sides[i].Head, 1);
                 var tail = Mathf.Max(gameField.sides[i].Tail, 1);
-                pos = pos / ((float)(gameField.sides[i].dots.Count))+o.offset;         
+                pos = pos / ((float)(gameField.sides[i].dots.Count))+o.Offset;         
                 o.transform.position = pos;
             
                 float length = (end-start).magnitude + tail /2+head/2;
-                o.Init(gameField.sides[i],rigids,length,i,dir.normalized,head,tail);
-                o.HitFloor += OnBarHitFloor;
+                o.Construct(gameField.sides[i],rigids,length,i,dir.normalized,head,tail);
+                o.OnFloorHit += OnBarHitFloor;
            
             
                 obstacles.Add(i+1, o);           
@@ -275,22 +275,22 @@ namespace NutBolts.Scripts
 
         private void OnMoveToLit(Screw sc,ScrewHole h)
         {
-            string move=string.Format("{0}_{1}:{2}",gameField.Histories.Count, sc.GetLit().iIndex, h.Lit.iIndex);
+            string move=string.Format("{0}_{1}:{2}",gameField.Histories.Count, sc.Lit.iIndex, h.Lit.iIndex);
             gameField.UpdateHistories(move);
             foreach(var obstacle in obstacles.Values)       
             {
-                obstacle.OnSave();
+                obstacle.Save();
             }
 
             LeanTween.move(sc.animator.gameObject, h.transform.position, 0.3f).setOnComplete(() =>
             {
-                h.Lit.Screw.Reactivate();
-                sc.OnRelease();
-                sc.DeActivate();
+                h.Lit.Screw.Reincornate();
+                sc.ReleaseScre();
+                sc.MakeNotActive();
             });
         }
 
-        private Lit GetLit(int y, int x)
+        private Fire GetLit(int y, int x)
         {
             if (lits.ContainsKey(y + "x" + x))
             {
@@ -298,7 +298,7 @@ namespace NutBolts.Scripts
             }
             return null;
         }
-        public Lit GetLit(int iIndex)
+        public Fire GetLit(int iIndex)
         {
             int x = iIndex % gameField.W;
             int y = iIndex / gameField.W;
@@ -367,7 +367,7 @@ namespace NutBolts.Scripts
 
         private readonly List<string> _collects = new ();
 
-        private void OnBarHitFloor(Obstacle obstacle)
+        private void OnBarHitFloor(Blocks obstacle)
         {
             if (_collects.Contains(obstacle.name)) return;
             _collects.Add(obstacle.name);
@@ -391,10 +391,10 @@ namespace NutBolts.Scripts
             VKSdk.VKAudioController.Instance.PlaySound("Drop");
             StartCoroutine(WaitForRemove(obstacle));
         }
-        IEnumerator WaitForRemove(Obstacle obstacle)
+        IEnumerator WaitForRemove(Blocks obstacle)
         {
             yield return new WaitUntil(() => ItemController.Instance._screwState == ScrewState.Waiting);
-            gameField.RemoveSide(obstacle.obstacleSide.id);
+            gameField.RemoveSide(obstacle.ObstacleSide.id);
         }
         public void OnPreviouseMove()
         {
@@ -414,16 +414,15 @@ namespace NutBolts.Scripts
             gameField.UpdateBoard(begin, CSquare.Nut);
             gameField.UpdateBoard(end, CSquare.Hole);
             GetLit(begin).Screw.Activate();
-            GetLit(end).Screw.DeActivate();
-            var listofsides = gameField.Histories[move];
+            GetLit(end).Screw.MakeNotActive();
             foreach(var pair in obstacles)
             {
                 if (gameField.CheckIsExistSide(move, pair.Key))
                 {
-                    pair.Value.Previous();
+                    pair.Value.PositionBefore();
                 }
             }
-            COLLECT = cTarget.targets[0].amount - FindObjectsOfType<Obstacle>().Length;
+            COLLECT = cTarget.targets[0].amount - FindObjectsOfType<Blocks>().Length;
             ItemController.Instance.Control();
             gameField.moves.RemoveAt(gameField.moves.Count - 1);
             gameField.Histories.Remove(move);
@@ -468,7 +467,7 @@ namespace NutBolts.Scripts
             {
                 if (lit.Screw)
                 {
-                    lit.Screw.TurnOnToolLight();
+                    lit.Screw.Light = true;
                 }
             }
         }
@@ -479,7 +478,7 @@ namespace NutBolts.Scripts
             {
                 if (lit.Screw)
                 {
-                    lit.Screw.TurnOffToolLight();
+                    lit.Screw.Light = false;
                 }
             }
         }
@@ -487,7 +486,7 @@ namespace NutBolts.Scripts
         {      
             FLAG_TIPS = true;
             INDEX_TIPS = 0;
-            Lit lit = GetLit(levelObject.tipPaths[INDEX_TIPS]);
+            Fire lit = GetLit(levelObject.tipPaths[INDEX_TIPS]);
             lit.IsActive = true;
         }
         public void OnNextTip()
@@ -527,7 +526,7 @@ namespace NutBolts.Scripts
            
             }
         }
-        public bool CheckIsExistTip(Lit l)
+        public bool CheckIsExistTip(Fire l)
         {
             if (levelObject == null) return false;
             if (levelObject.tipPaths == null) return false;

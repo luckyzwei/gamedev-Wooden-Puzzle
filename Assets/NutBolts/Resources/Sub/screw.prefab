@@ -218,7 +218,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 7d514003de45877448776aafd682cfa4, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  animator: {fileID: 3133701209401535945}
+  _animatorContoler: {fileID: 3133701209401535945}
+  _toolLight: {fileID: 2415907248489934929}
   rigidboy2D: {fileID: 9107477568051257078}
 --- !u!95 &112077054975912718
 Animator:

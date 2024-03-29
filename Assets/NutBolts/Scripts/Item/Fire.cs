@@ -2,7 +2,7 @@
 
 namespace NutBolts.Scripts.Item
 {
-    public class Lit : MonoBehaviour
+    public class Fire : MonoBehaviour
     {
         public int iIndex;
         public GameObject lightObject;
@@ -14,9 +14,5 @@ namespace NutBolts.Scripts.Item
             IsActive = false;
         }
         
-        public void TurnOff()
-        {
-            lightObject.SetActive(false);
-        }
     }
 }
