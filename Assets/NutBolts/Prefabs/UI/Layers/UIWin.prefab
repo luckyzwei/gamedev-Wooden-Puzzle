@@ -797,8 +797,8 @@ MonoBehaviour:
   layerIndex: 0
   layerKey: 
   isLayerAnimOpenDone: 0
-  textTittle: {fileID: 8570231930454390902}
-  vkInfiniteScroll: {fileID: 365039948543073606}
+  _levelText: {fileID: 8570231930454390902}
+  _scroll: {fileID: 365039948543073606}
 --- !u!1 &5507547584059401978
 GameObject:
   m_ObjectHideFlags: 0
@@ -1403,7 +1403,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 5574484529950896351}
         m_TargetAssemblyTypeName: UIWin, Assembly-CSharp
-        m_MethodName: OnClickNextLevel
+        m_MethodName: OpenNextLevel
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1637,7 +1637,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4724203449830298253}
-  - component: {fileID: 3380836014248898477}
   m_Layer: 5
   m_Name: safeArea
   m_TagString: Untagged
@@ -1665,27 +1664,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &3380836014248898477
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8675589708690134324}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c97afc556caea1c44969477eb7ddec74, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ConformX: 0
-  ConformY: 1
-  IgnoreYBottomIOS: 0
-  Logging: 0
-  isApply: 1
-  isScale: 0
-  OnApplySafeArea:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &8914291995922970229
 GameObject:
   m_ObjectHideFlags: 0
@@ -1808,7 +1786,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 5574484529950896351}
         m_TargetAssemblyTypeName: UIWin, Assembly-CSharp
-        m_MethodName: OnClickGoHome
+        m_MethodName: HomeButton
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

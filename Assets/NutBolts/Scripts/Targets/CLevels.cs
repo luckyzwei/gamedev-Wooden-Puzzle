@@ -4,23 +4,23 @@ using UnityEngine;
 namespace NutBolts.Scripts.Targets
 {
 	[CreateAssetMenu(fileName = "TargetLevel", menuName = "TargetLevel")]
-	public class CTargetLevels : ScriptableObject
+	public class CLevels : ScriptableObject
 	{
 		[Reorderable]
 		public CTargetList targets;
 
 		[System.Serializable]
-		public class CTargetList : ReorderableArray<CTargetObject>
+		public class CTargetList : ReorderableArray<CTarget>
 		{
 		}
 	}
 	[System.Serializable]
-	public class CTargetObject
+	public class CTarget
 	{
-		public CTarget type;
+		public CTargetTypes type;
 		public int amount;
 	}
-	public enum CTarget
+	public enum CTargetTypes
 	{
 		COLLECT,
 		TIME

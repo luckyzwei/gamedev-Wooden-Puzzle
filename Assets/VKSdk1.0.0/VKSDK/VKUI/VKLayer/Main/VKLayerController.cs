@@ -190,7 +190,7 @@ namespace VKSdk.UI
 
             layer.SetLayerIndex(layerCount);
             vkLayerTemps.Add(layer);
-            layer.EnableLayer();
+            layer.Activate();
 
             // animation
             switch (layer.layerAnimType)
@@ -275,7 +275,7 @@ namespace VKSdk.UI
             // action
             if (isCreate)
                 sLayer.StartLayer();
-            sLayer.ShowLayer();
+            sLayer.ActivateLayer();
 
             return sLayer;
         }
@@ -318,7 +318,7 @@ namespace VKSdk.UI
             if (layer.layerIndex == vkLayerTemps.Count)
             {
                 if (lastLayer != null)
-                    lastLayer.EnableLayer();
+                    lastLayer.Activate();
             }
             else
             {

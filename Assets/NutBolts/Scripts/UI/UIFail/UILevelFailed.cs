@@ -3,26 +3,26 @@ using VKSdk.UI;
 
 namespace NutBolts.Scripts.UI.UIFail
 {
-    public class UIFail : VKLayer
+    public class UILevelFailed : VKLayer
     {
-        public void OnClick_Home()
+        public void Home()
         {
             VKAudioController.Instance.PlaySound("Button");
-            var uiGame = (UIGame.UIGame)VKLayerController.Instance.GetLayer("UIGame");
+            var uiGame = (UIGame.UIGameMenu)VKLayerController.Instance.GetLayer("UIGame");
             uiGame.Close();
             CLevelManager.Instance.Reset();
             VKLayerController.Instance.ShowLayer("UIMenu");
             Close();
         }
-        public void OnClick_AddTime()
+        public void AddTime()
         {
             VKAudioController.Instance.PlaySound("Button");
-            var uiGame = (UIGame.UIGame)VKLayerController.Instance.GetLayer("UIGame");
+            var uiGame = (UIGame.UIGameMenu)VKLayerController.Instance.GetLayer("UIGame");
             uiGame.AddTime(60);
             Close();
       
         }
-        public void OnClick_Retry()
+        public void Retry()
         {
             VKAudioController.Instance.PlaySound("Button");
             CLevelManager.Instance.OnRetry();

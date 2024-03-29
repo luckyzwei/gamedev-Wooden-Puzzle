@@ -1,5 +1,6 @@
 using NutBolts.Scripts.Data;
 using UnityEngine;
+using UnityEngine.Serialization;
 using UnityEngine.UI;
 using VKSdk;
 
@@ -7,44 +8,42 @@ namespace NutBolts.Scripts.UI.UIGame
 {
     public class CBoosterUI : MonoBehaviour
     {
-        public GameObject videoObj;
-        public GameObject normalObj;
-        public AbilityType boosterType;
-        private AbilityObj boosterObj;
-        public void Initialized()
+         
+        [FormerlySerializedAs("videoObj")] [SerializeField] private GameObject _forVideo;
+        [FormerlySerializedAs("normalObj")] [SerializeField] private GameObject _normal;
+        [FormerlySerializedAs("boosterType")] [SerializeField] private AbilityType _type;
+        private AbilityObj _booster;
+        public void Construct()
         {
-            boosterObj = DataMono.Instance.GetAbilityObj(boosterType);
-            RefreshBooster();
+            _booster = DataMono.Instance.GetAbilityObj(_type);
+            ResetBooster();
         }
-        public void OnCick()
+        public void UseAbility()
         {
             VKAudioController.Instance.PlaySound("Button");
-            if (boosterObj == null)
+            _booster ??= DataMono.Instance.GetAbilityObj(_type);
+            if (_booster.count == 0)
             {
-                boosterObj = DataMono.Instance.GetAbilityObj(boosterType);
-            }
-            if (boosterObj.count == 0)
-            {
-                OnClickVideo();
+                Video();
             }
             else
             {
-                OnClickNormal();
+                SimpleUse();
             }
         }
-        private void OnClickVideo()
+        private void Video()
         {
             OnComplete();
         }
-        private void OnClickNormal()
+        private void SimpleUse()
         {
-            DataMono.Instance.SubAbility(boosterType);
+            DataMono.Instance.SubAbility(_type);
             OnComplete();
-            RefreshBooster();       
+            ResetBooster();       
         }
         private void OnComplete()
         {
-            switch (boosterObj.Type)
+            switch (_booster.Type)
             {
                 case AbilityType.CReset: OnReset(); break;
                 case AbilityType.CTip: OnTips(); break;
@@ -52,7 +51,6 @@ namespace NutBolts.Scripts.UI.UIGame
                 case AbilityType.CPrevious: OnPrevious(); break;
             }
         }
-  
         private void OnReset()
         {
             CLevelManager.Instance.OnBoosterReset();
@@ -69,19 +67,19 @@ namespace NutBolts.Scripts.UI.UIGame
         {
             CLevelManager.Instance.OnPreviouseMove();
         }
-        public void RefreshBooster()
-        {
-            if (boosterObj.count == 0)
-            {
 
-                videoObj.SetActive(true);
-                normalObj.SetActive(false);
+        private void ResetBooster()
+        {
+            if (_booster.count == 0)
+            {
+                _forVideo.SetActive(true);
+                _normal.SetActive(false);
             }
             else
             {
-                videoObj.SetActive(false);
-                normalObj.SetActive(true);
-                normalObj.transform.GetChild(0).GetComponent<Text>().text = boosterObj.count.ToString();
+                _forVideo.SetActive(false);
+                _normal.SetActive(true);
+                _normal.transform.GetChild(0).GetComponent<Text>().text = _booster.count.ToString();
             }
         }
     }

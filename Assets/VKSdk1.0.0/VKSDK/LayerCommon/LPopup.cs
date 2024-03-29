@@ -32,9 +32,9 @@ namespace VKSdkDemo
             base.StartLayer();
         }
 
-        public override void ShowLayer()
+        public override void ActivateLayer()
         {
-            base.ShowLayer();
+            base.ActivateLayer();
         }
 
         public override void ReloadLayer()
@@ -42,9 +42,9 @@ namespace VKSdkDemo
             base.ReloadLayer();
         }
 
-        public override void EnableLayer()
+        public override void Activate()
         {
-            base.EnableLayer();
+            base.Activate();
         }
 
         public override void DisableLayer()

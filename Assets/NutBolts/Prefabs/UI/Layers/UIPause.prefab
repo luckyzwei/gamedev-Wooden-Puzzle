@@ -123,8 +123,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 8529824620963491089}
-        m_TargetAssemblyTypeName: UIPause, Assembly-CSharp
-        m_MethodName: OnClick_Sound
+        m_TargetAssemblyTypeName: NutBolts.Scripts.UI.UIPause.UIPause, Assembly-CSharp
+        m_MethodName: ChangeSound
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -392,8 +392,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 8529824620963491089}
-        m_TargetAssemblyTypeName: UIPause, Assembly-CSharp
-        m_MethodName: OnClick_Music
+        m_TargetAssemblyTypeName: NutBolts.Scripts.UI.UIPause.UIPause, Assembly-CSharp
+        m_MethodName: MusicChange
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -675,8 +675,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 8529824620963491089}
-        m_TargetAssemblyTypeName: UIPause, Assembly-CSharp
-        m_MethodName: OnClick_Close
+        m_TargetAssemblyTypeName: NutBolts.Scripts.UI.UIPause.UIPause, Assembly-CSharp
+        m_MethodName: ClosePause
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -988,9 +988,9 @@ MonoBehaviour:
   layerIndex: 0
   layerKey: 
   isLayerAnimOpenDone: 0
-  soundBtn: {fileID: 2813173095380262933}
-  musicBtn: {fileID: 6894879194618937643}
-  shakeBtn: {fileID: 4815745669830773698}
+  _soundToggle: {fileID: 2813173095380262933}
+  _musicToggle: {fileID: 6894879194618937643}
+  _shakeToggle: {fileID: 4815745669830773698}
 --- !u!1 &4881590145598636827
 GameObject:
   m_ObjectHideFlags: 0
@@ -1114,8 +1114,8 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 8529824620963491089}
-        m_TargetAssemblyTypeName: UIPause, Assembly-CSharp
-        m_MethodName: OnClick_Shake
+        m_TargetAssemblyTypeName: NutBolts.Scripts.UI.UIPause.UIPause, Assembly-CSharp
+        m_MethodName: ShakeChange
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1550,7 +1550,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 8529824620963491089}
         m_TargetAssemblyTypeName: UIPause, Assembly-CSharp
-        m_MethodName: OnClickHome
+        m_MethodName: ReturnHome
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1693,7 +1693,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4724203449830298253}
-  - component: {fileID: 3380836014248898477}
   m_Layer: 5
   m_Name: safeArea
   m_TagString: Untagged
@@ -1721,27 +1720,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &3380836014248898477
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8675589708690134324}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c97afc556caea1c44969477eb7ddec74, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ConformX: 0
-  ConformY: 1
-  IgnoreYBottomIOS: 0
-  Logging: 0
-  isApply: 1
-  isScale: 0
-  OnApplySafeArea:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1 &9042697989400344316
 GameObject:
   m_ObjectHideFlags: 0

@@ -29,7 +29,7 @@ namespace NutBolts.Scripts
         
         public LevelObject levelObject { get; private set; }
     
-        public CTargetLevels cTarget;
+        public CLevels cTarget;
   
         public GameField gameField;
    
@@ -112,10 +112,10 @@ namespace NutBolts.Scripts
                 mapText = Resources.Load("Level/" + currentLevel) as TextAsset;
             }
             levelObject = JsonUtility.FromJson<LevelObject>(mapText.text);
-            cTarget = Resources.Load("Target/Level" + currentLevel) as CTargetLevels;
+            cTarget = Resources.Load("Target/Level" + currentLevel) as CLevels;
             if (cTarget == null)
             {
-                cTarget = Resources.Load("Target/Level" + currentLevel) as CTargetLevels;
+                cTarget = Resources.Load("Target/Level" + currentLevel) as CLevels;
             }
         }
 
@@ -127,13 +127,13 @@ namespace NutBolts.Scripts
             GenerateLit();
             Invoke("GenerateItem", 0.1f);
             Invoke("CompleteLoadLevel", 0.5f);
-            var uiGame =(UIGame) VKLayerController.Instance.ShowLayer("UIGame");
+            var uiGame =(UIGameMenu) VKLayerController.Instance.ShowLayer("UIGame");
             int second=300;
             if (cTarget.targets.Length > 1)
             {
                 second = cTarget.targets[1].amount;
             }
-            uiGame.Init(second);
+            uiGame.Construct(second);
             OnEnterGame?.Invoke();
         }
 
@@ -361,7 +361,7 @@ namespace NutBolts.Scripts
 
         private void OnClose()
         {
-            var uiGame = (UIGame)VKLayerController.Instance.GetLayer("UIGame");
+            var uiGame = (UIGameMenu)VKLayerController.Instance.GetLayer("UIGame");
             uiGame.Close();
         }
 

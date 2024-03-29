@@ -810,10 +810,10 @@ namespace NutBolts.Scripts.Editor
         }
         private void OpenTarget()
         {
-            var asset = Resources.Load<CTargetLevels>("Target/Level" + levelNumber);
+            var asset = Resources.Load<CLevels>("Target/Level" + levelNumber);
             if (asset == null)
             {
-                asset = CreateInstance<CTargetLevels>();
+                asset = CreateInstance<CLevels>();
                 asset.name = "Level" + levelNumber;
                 string assetPathAndName = AssetDatabase.GenerateUniqueAssetPath("Assets/NutBolts/Resources/Target/Level" + levelNumber + ".asset");
                 AssetDatabase.CreateAsset(asset, assetPathAndName);

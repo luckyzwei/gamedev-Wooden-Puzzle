@@ -8,40 +8,41 @@ namespace NutBolts.Scripts.UI.UIWin
 {
     public class UIWin : VKLayer
     {
-        public Text textTittle;
+        
+        [SerializeField] private Text _levelText;
         private LevelObject _levelObj;
-        public VKInfiniteScroll vkInfiniteScroll;
+        [SerializeField] private VKInfiniteScroll _scroll;
     
         public override void Close()
         {
             base.Close();
-            vkInfiniteScroll.OnFill -= FillItem;
-            vkInfiniteScroll.OnWidth -= OnWidth;
+            _scroll.OnFill -= AddReward;
+            _scroll.OnWidth -= OnWidthChange;
         }
-        public void OnClickNextLevel()
+        public void OpenNextLevel()
         {
             VKAudioController.Instance.PlaySound("Button");
             CLevelManager.Instance.NextLevel();
             Close();
         }
-        public void OnClickGoHome()
+        public void HomeButton() //TODO fix
         {
             VKAudioController.Instance.PlaySound("Button");
-            var uiGame = (UIGame.UIGame)VKLayerController.Instance.GetLayer("UIGame");
+            var uiGame = (UIGame.UIGameMenu)VKLayerController.Instance.GetLayer("UIGame");
             uiGame.Close();
             CLevelManager.Instance.Reset();
             VKLayerController.Instance.ShowLayer("UIMenu");
             Close();
         }
-        public void Init()
+        public void Construct()
         {
-            this._levelObj = CLevelManager.Instance.levelObject;
+            _levelObj = CLevelManager.Instance.levelObject;
         
-            textTittle.text = string.Format("Level {0}", CLevelManager.LEVEL);
-            vkInfiniteScroll.RecycleAll();
-            vkInfiniteScroll.OnWidth += OnWidth;
-            vkInfiniteScroll.OnFill += FillItem;
-            vkInfiniteScroll.InitData(_levelObj.rewards.Count);
+            _levelText.text = string.Format("Level {0}", CLevelManager.LEVEL);
+            _scroll.RecycleAll();
+            _scroll.OnWidth += OnWidthChange;
+            _scroll.OnFill += AddReward;
+            _scroll.InitData(_levelObj.rewards.Count);
             for(int i=0; i<_levelObj.rewards.Count; i++)
             {
                 AbilityObj b = _levelObj.rewards[i].ConvertRewardToBooster();
@@ -58,12 +59,12 @@ namespace NutBolts.Scripts.UI.UIWin
             VKAudioController.Instance.PlaySound("Cheers");
         }
 
-        private void FillItem(int index, GameObject go)
+        private void AddReward(int index, GameObject go)
         {
             go.GetComponent<RewardUI>().InitData(_levelObj.rewards[index]);
         }
 
-        private int OnWidth(int index)
+        private static int OnWidthChange(int index)
         {
             return 400;
         }

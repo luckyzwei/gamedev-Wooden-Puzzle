@@ -7,35 +7,34 @@ namespace NutBolts.Scripts.UI.UISetting
 {
     public class UISetting : VKLayer
     {
-        [SerializeField] Transform soundBtn;
-        [SerializeField] Transform musicBtn;
-        [SerializeField] Transform shakeBtn;
+        [SerializeField] private Transform _soundToggle;
+        [SerializeField] private Transform _musicToggle;
+        [SerializeField] private Transform _shakeToggle;
  
-        public override void EnableLayer()
+        public override void Activate()
         {
-            base.EnableLayer();
-            Refresh();
+            base.Activate();
+            Reset();
         }
     
-        public override void ShowLayer()
+        public override void ActivateLayer()
         {
-            base.ShowLayer();
-            Refresh();
+            base.ActivateLayer();
+            Reset();
         }
-
-
-        public void OnClick_Sound()
+        
+        public void SoundChange()
         {
             VKAudioController.Instance.PlaySound("Button");
             DataMono.Instance.SettingData.isSound = !DataMono.Instance.SettingData.isSound;
-            Refresh();
+            Reset();
             DataMono.Instance.SaveAll();
         }
-        public void OnClick_Music()
+        public void MusicChange()
         {
             VKAudioController.Instance.PlaySound("Button");
             DataMono.Instance.SettingData.isMusic = !DataMono.Instance.SettingData.isMusic;
-            Refresh();
+            Reset();
             DataMono.Instance.SaveAll();
             if (DataMono.Instance.SettingData.isMusic)
             {
@@ -46,30 +45,30 @@ namespace NutBolts.Scripts.UI.UISetting
                 VKAudioController.Instance.StopMusic(()=> { });
             }
         }
-        public void OnClick_Shake()
+        public void ShakeChange()
         {
             VKAudioController.Instance.PlaySound("Button");
             DataMono.Instance.SettingData.isShake = !DataMono.Instance.SettingData.isShake;
-            Refresh();
+            Reset();
             DataMono.Instance.SaveAll();
         }
-        public void OnClick_Close()
+        public void CloseSettings()
         {
             VKAudioController.Instance.PlaySound("Button");
             VKAudioController.Instance.isMusicOn = DataMono.Instance.SettingData.isMusic;
             VKAudioController.Instance.isSoundOn = DataMono.Instance.SettingData.isSound;   
             Close();
         }
-        private void Refresh()
+        private void Reset()
         {
-            soundBtn.GetChild(0).gameObject.SetActive(DataMono.Instance.SettingData.isSound);
-            soundBtn.GetChild(1).gameObject.SetActive(!DataMono.Instance.SettingData.isSound);
+            _soundToggle.GetChild(0).gameObject.SetActive(DataMono.Instance.SettingData.isSound);
+            _soundToggle.GetChild(1).gameObject.SetActive(!DataMono.Instance.SettingData.isSound);
 
-            musicBtn.GetChild(0).gameObject.SetActive(DataMono.Instance.SettingData.isMusic);
-            musicBtn.GetChild(1).gameObject.SetActive(!DataMono.Instance.SettingData.isMusic);
+            _musicToggle.GetChild(0).gameObject.SetActive(DataMono.Instance.SettingData.isMusic);
+            _musicToggle.GetChild(1).gameObject.SetActive(!DataMono.Instance.SettingData.isMusic);
 
-            shakeBtn.GetChild(0).gameObject.SetActive(DataMono.Instance.SettingData.isShake);
-            shakeBtn.GetChild(1).gameObject.SetActive(!DataMono.Instance.SettingData.isShake);
+            _shakeToggle.GetChild(0).gameObject.SetActive(DataMono.Instance.SettingData.isShake);
+            _shakeToggle.GetChild(1).gameObject.SetActive(!DataMono.Instance.SettingData.isShake);
         }
     }
 }

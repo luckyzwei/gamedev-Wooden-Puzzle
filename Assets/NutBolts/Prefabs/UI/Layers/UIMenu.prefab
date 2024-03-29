@@ -801,7 +801,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 7465220991608481812}
         m_TargetAssemblyTypeName: UIMenu, Assembly-CSharp
-        m_MethodName: OnClickSetting
+        m_MethodName: OpenSettings
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -934,7 +934,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 7465220991608481812}
         m_TargetAssemblyTypeName: UIMenu, Assembly-CSharp
-        m_MethodName: OnClickPlay
+        m_MethodName: Play
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

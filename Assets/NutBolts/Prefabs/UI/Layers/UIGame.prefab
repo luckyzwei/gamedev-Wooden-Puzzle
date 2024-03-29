@@ -1270,7 +1270,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 6040266820343995125}
         m_TargetAssemblyTypeName: CBoosterUI, Assembly-CSharp
-        m_MethodName: OnCick
+        m_MethodName: UseAbility
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1292,9 +1292,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 406d305b27af87145b2aed5243eebedf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  videoObj: {fileID: 263399337248648048}
-  normalObj: {fileID: 2942902018583878414}
-  boosterType: 2
+  _forVideo: {fileID: 263399337248648048}
+  _normal: {fileID: 2942902018583878414}
+  _type: 0
 --- !u!1 &3751864408310719498
 GameObject:
   m_ObjectHideFlags: 0
@@ -1496,7 +1496,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1466214098059908715}
         m_TargetAssemblyTypeName: CBoosterUI, Assembly-CSharp
-        m_MethodName: OnCick
+        m_MethodName: UseAbility
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1518,9 +1518,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 406d305b27af87145b2aed5243eebedf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  videoObj: {fileID: 2732799514356766605}
-  normalObj: {fileID: 1566725346448061019}
-  boosterType: 3
+  _forVideo: {fileID: 2732799514356766605}
+  _normal: {fileID: 1566725346448061019}
+  _type: 0
 --- !u!1 &3867565619444374665
 GameObject:
   m_ObjectHideFlags: 0
@@ -1828,13 +1828,13 @@ MonoBehaviour:
   layerIndex: 0
   layerKey: 
   isLayerAnimOpenDone: 0
-  vkCountDown: {fileID: 2715116686132872100}
-  cBoosters:
+  _countDown: {fileID: 2715116686132872100}
+  _abilities:
   - {fileID: 1522846332705079867}
   - {fileID: 4784916218426859274}
   - {fileID: 1466214098059908715}
   - {fileID: 6040266820343995125}
-  levelText: {fileID: 4630024656391565823}
+  _levelText: {fileID: 4630024656391565823}
 --- !u!1 &4606982799374709526
 GameObject:
   m_ObjectHideFlags: 0
@@ -2115,7 +2115,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 1522846332705079867}
         m_TargetAssemblyTypeName: CBoosterUI, Assembly-CSharp
-        m_MethodName: OnCick
+        m_MethodName: UseAbility
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2137,9 +2137,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 406d305b27af87145b2aed5243eebedf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  videoObj: {fileID: 3867565619444374665}
-  normalObj: {fileID: 3069359524927654391}
-  boosterType: 0
+  _forVideo: {fileID: 3867565619444374665}
+  _normal: {fileID: 3069359524927654391}
+  _type: 0
 --- !u!1 &5637826506923318189
 GameObject:
   m_ObjectHideFlags: 0
@@ -2555,7 +2555,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 4784916218426859274}
         m_TargetAssemblyTypeName: CBoosterUI, Assembly-CSharp
-        m_MethodName: OnCick
+        m_MethodName: UseAbility
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -2577,9 +2577,9 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 406d305b27af87145b2aed5243eebedf, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  videoObj: {fileID: 2964244151114947488}
-  normalObj: {fileID: 1168928617716360370}
-  boosterType: 1
+  _forVideo: {fileID: 2964244151114947488}
+  _normal: {fileID: 1168928617716360370}
+  _type: 0
 --- !u!1 &7053966388666861189
 GameObject:
   m_ObjectHideFlags: 0
@@ -3107,7 +3107,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 7514478227131372848}
         m_TargetAssemblyTypeName: UIGame, Assembly-CSharp
-        m_MethodName: OnClickSetting
+        m_MethodName: OpenSettings
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -3202,7 +3202,6 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 4724203449830298253}
-  - component: {fileID: 3380836014248898477}
   m_Layer: 5
   m_Name: safeArea
   m_TagString: Untagged
@@ -3231,27 +3230,6 @@ RectTransform:
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 0, y: 0}
   m_Pivot: {x: 0.5, y: 0.5}
---- !u!114 &3380836014248898477
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 8675589708690134324}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: c97afc556caea1c44969477eb7ddec74, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  ConformX: 0
-  ConformY: 1
-  IgnoreYBottomIOS: 0
-  Logging: 0
-  isApply: 1
-  isScale: 0
-  OnApplySafeArea:
-    m_PersistentCalls:
-      m_Calls: []
 --- !u!1001 &6413378438740892184
 PrefabInstance:
   m_ObjectHideFlags: 0

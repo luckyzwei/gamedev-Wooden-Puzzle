@@ -138,7 +138,7 @@ namespace VKSdk.UI
         /**
          * Khoi chay khi layer duoc add vao list active
          */
-        public virtual void ShowLayer()
+        public virtual void ActivateLayer()
         {
             
         }
@@ -146,7 +146,7 @@ namespace VKSdk.UI
         /**
          * Khoi chay khi layer la layer dau tien
          */
-        public virtual void EnableLayer()
+        public virtual void Activate()
         {
             graphicRaycaster.enabled = true;
 

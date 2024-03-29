@@ -523,7 +523,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2175598787329210461}
         m_TargetAssemblyTypeName: UIFail, Assembly-CSharp
-        m_MethodName: OnClick_Retry
+        m_MethodName: Retry
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1206,7 +1206,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2175598787329210461}
         m_TargetAssemblyTypeName: UIFail, Assembly-CSharp
-        m_MethodName: OnClick_AddTime
+        m_MethodName: AddTime
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -1446,7 +1446,7 @@ MonoBehaviour:
       m_Calls:
       - m_Target: {fileID: 2175598787329210461}
         m_TargetAssemblyTypeName: UIFail, Assembly-CSharp
-        m_MethodName: OnClick_Home
+        m_MethodName: Home
         m_Mode: 1
         m_Arguments:
           m_ObjectArgument: {fileID: 0}

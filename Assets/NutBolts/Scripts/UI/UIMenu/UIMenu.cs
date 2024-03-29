@@ -24,16 +24,16 @@ namespace NutBolts.Scripts.UI.UIMenu
         }
 
   
-        public override void ShowLayer()
+        public override void ActivateLayer()
         {
-            base.ShowLayer();
+            base.ActivateLayer();
             if (DataMono.Instance.SettingData.isMusic)
             {
                 VKAudioController.Instance.PlayMusic("game_music");
             }
         }
     
-        public void OnClickPlay()
+        public void Play()
         {
             LoadLevel(DataMono.Instance.Data.Level);
         }
@@ -47,7 +47,7 @@ namespace NutBolts.Scripts.UI.UIMenu
             CLevelManager.THIS.GameStatus = GameState.PrepareGame;
             Close();
         }
-        public void OnClickSetting()
+        public void OpenSettings()
         {
             VKAudioController.Instance.PlaySound("Button");
             VKLayerController.Instance.ShowLayer("UISetting");

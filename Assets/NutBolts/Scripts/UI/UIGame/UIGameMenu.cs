@@ -1,24 +1,23 @@
 using TMPro;
 using UnityEngine;
+
 using VKSdk;
 using VKSdk.UI;
 
 namespace NutBolts.Scripts.UI.UIGame
 {
-    public class UIGame : VKLayer
+    public class UIGameMenu : VKLayer
     {
-        public VKCountDownLite vkCountDown;
-        public CBoosterUI[] cBoosters;
-        public TextMeshProUGUI levelText;
+        [SerializeField] private VKCountDownLite _countDown;
+        [SerializeField] private CBoosterUI[] _abilities;
+        [SerializeField] private TextMeshProUGUI _levelText;
         private void OnEnable()
         {
-            CLevelManager.OnWin += WinGame;
-       
+            CLevelManager.OnWin += Wictory;
         }
         private void OnDisable()
         {
-            CLevelManager.OnWin -= WinGame;
-       
+            CLevelManager.OnWin -= Wictory;
         }
         public override void Close()
         {
@@ -26,23 +25,22 @@ namespace NutBolts.Scripts.UI.UIGame
             Clear();
         }
         
-        public void Init(int seconds=60)
+        public void Construct(int seconds=60)
         {
-            foreach (var booster in cBoosters)
+            foreach (var booster in _abilities)
             {
-                booster.Initialized();
+                booster.Construct();
             }
-            vkCountDown.SetSeconds(seconds);
-            vkCountDown.StartCountDown();
-            vkCountDown.OnCountDownComplete = FailGame;
-            levelText.text = $"LEVEL {CLevelManager.LEVEL}";
+            _countDown.SetSeconds(seconds);
+            _countDown.StartCountDown();
+            _countDown.OnCountDownComplete = GameLose;
+            _levelText.text = $"LEVEL {CLevelManager.LEVEL}";
         
 
         }
         #region Listenner
-        public void OnClickSetting()
+        public void OpenSettings()
         {
-
             VKLayerController.Instance.ShowLayer("UIPause");
             VKAudioController.Instance.PlaySound("Button");
         }
@@ -50,14 +48,14 @@ namespace NutBolts.Scripts.UI.UIGame
         #endregion
         #region method
 
-        private void WinGame()
+        private void Wictory()
         {
             Clear();
             var uiWin = (UIWin.UIWin)VKLayerController.Instance.ShowLayer("UIWin");
-            uiWin.Init();
+            uiWin.Construct();
         }
 
-        private void FailGame()
+        private void GameLose()
         {
             VKAudioController.Instance.PlaySound($"Game_over_{Random.Range(1, 3)}");
             VKLayerController.Instance.ShowLayer("UIFail");
@@ -65,16 +63,15 @@ namespace NutBolts.Scripts.UI.UIGame
 
         private void Clear()
         {      
-            vkCountDown.OnCountDownComplete = null;
-            vkCountDown.StopCountDown();
+            _countDown.OnCountDownComplete = null;
+            _countDown.StopCountDown();
        
         }
         public void AddTime(int addTime)
         {
-        
-            vkCountDown.SetSeconds( addTime);
-            vkCountDown.OnCountDownComplete = FailGame;
-            vkCountDown.StartCountDown();
+            _countDown.SetSeconds( addTime);
+            _countDown.OnCountDownComplete = GameLose;
+            _countDown.StartCountDown();
         }
    
         #endregion
