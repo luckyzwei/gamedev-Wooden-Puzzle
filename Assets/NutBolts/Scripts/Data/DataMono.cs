@@ -2,47 +2,49 @@ using UnityEngine;
 
 namespace NutBolts.Scripts.Data
 {
-    public class UserData : MonoBehaviour
+    public class DataMono : MonoBehaviour
     {
-        private static UserData instance;
-        public static UserData Instance
+        private static DataMono instance;
+        public static DataMono Instance
         {
             get 
             {
                 if (instance != null) return instance;
                 
                 GameObject go = new GameObject("UserData");
-                instance = go.AddComponent<UserData>();
+                instance = go.AddComponent<DataMono>();
                 instance.LoadLocalData();
                 return instance; 
             }
         }
         public  GameData CGameData { get; private set; }
-        public  SettingData CSettingData { get; private set; }
+        public  SettingInfo CSettingData { get; private set; }
         private void Awake()
         {
             DontDestroyOnLoad(this);
         }
 
 
-        public void AddBooster(BoosterObj boosterObj)
+        public void AddBooster(AbilityObj boosterObj)
         {
-            CGameData.AddBooster(boosterObj);
+            CGameData.AddAbility(boosterObj);
             SaveLocalData();
         }
-        public void SubBooster(BoosterType boostertype)
+        public void SubBooster(AbilityType boostertype)
         {
-            CGameData.UseBooster(boostertype);
+            CGameData.UseAbility(boostertype);
             SaveLocalData();
         }
-        public BoosterObj GetBoosterObj(BoosterType type)
+        public AbilityObj GetBoosterObj(AbilityType type)
         {
-            for (int i = 0; i < CGameData.Boosters.Count; i++) {
-                if (CGameData.Boosters[i].boosterType == type)
+            foreach (var t in CGameData.Abilities)
+            {
+                if (t.Type == type)
                 {
-                    return CGameData.Boosters[i];
+                    return t;
                 }
             }
+
             return null;
         }
         private void LoadLocalData()
@@ -59,11 +61,11 @@ namespace NutBolts.Scripts.Data
             string jsonSettingString = PlayerPrefs.GetString("SettingData", "");
             if (jsonSettingString == string.Empty)
             {
-                CSettingData = new SettingData();
+                CSettingData = new SettingInfo();
             }
             else
             {
-                CSettingData = JsonUtility.FromJson<SettingData>(jsonSettingString);
+                CSettingData = JsonUtility.FromJson<SettingInfo>(jsonSettingString);
            
             }
             SaveLocalData();     

@@ -44,17 +44,17 @@ namespace NutBolts.Scripts.UI.UIWin
             vkInfiniteScroll.InitData(_levelObj.rewards.Count);
             for(int i=0; i<_levelObj.rewards.Count; i++)
             {
-                BoosterObj b = _levelObj.rewards[i].ConvertRewardToBooster();
+                AbilityObj b = _levelObj.rewards[i].ConvertRewardToBooster();
                 if (b == null)
                 {
-                    UserData.Instance.CGameData.TotalCoin += _levelObj.rewards[i].amount;
+                    DataMono.Instance.CGameData.Coins += _levelObj.rewards[i].amount;
                 }
                 else
                 {
-                    UserData.Instance.AddBooster(b);
+                    DataMono.Instance.AddBooster(b);
                 }
             }
-            UserData.Instance.SaveLocalData();
+            DataMono.Instance.SaveLocalData();
             VKAudioController.Instance.PlaySound("Cheers");
         }
 

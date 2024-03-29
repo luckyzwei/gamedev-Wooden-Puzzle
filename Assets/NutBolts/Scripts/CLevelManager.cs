@@ -91,8 +91,8 @@ namespace NutBolts.Scripts
             if (LEVEL == 0)
             {
                 LEVEL = 1;
-                UserData.Instance.CGameData.CurrentLevel = 1;
-                UserData.Instance.SaveLocalData();
+                DataMono.Instance.CGameData.Level = 1;
+                DataMono.Instance.SaveLocalData();
             }     
             LoadDataFromLocal(LEVEL);
         
@@ -386,8 +386,8 @@ namespace NutBolts.Scripts
                 if (OnWin != null)
                 {
                     OnWin();
-                    UserData.Instance.CGameData.CurrentLevel++;
-                    UserData.Instance.SaveLocalData();
+                    DataMono.Instance.CGameData.Level++;
+                    DataMono.Instance.SaveLocalData();
                 }
            
             }
@@ -551,10 +551,10 @@ namespace NutBolts.Scripts
         }
         public void ClickCoinHole(Hole h)
         {
-            if (UserData.Instance.CGameData.TotalCoin >= 100)
+            if (DataMono.Instance.CGameData.Coins >= 100)
             {
-                UserData.Instance.CGameData.TotalCoin -= 100;
-                UserData.Instance.SaveLocalData();
+                DataMono.Instance.CGameData.Coins -= 100;
+                DataMono.Instance.SaveLocalData();
                 h.isCoin = false;
                 VKNotifyController.Instance.AddNotify("-100 coin.", VKNotifyController.TypeNotify.Normal);
            

@@ -46,15 +46,15 @@ namespace NutBolts.Scripts.Data
     public class RewardObj{
         public RewardType rewardType;
         public int amount;
-        public BoosterObj ConvertRewardToBooster()
+        public AbilityObj ConvertRewardToBooster()
         {
-            BoosterObj b = new BoosterObj();
+            AbilityObj b = new AbilityObj();
             switch (rewardType)
             {
                 case RewardType.Coin: return null;
-                case RewardType.Reset: b.boosterType = BoosterType.CReset; break;
-                case RewardType.Tip: b.boosterType = BoosterType.CTip; break;
-                case RewardType.Tool: b.boosterType = BoosterType.CTool; break;
+                case RewardType.Reset: b.Type = AbilityType.CReset; break;
+                case RewardType.Tip: b.Type = AbilityType.CTip; break;
+                case RewardType.Tool: b.Type = AbilityType.CTool; break;
                 default: return null;
             }
             return b;

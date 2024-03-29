@@ -208,7 +208,7 @@ namespace NutBolts.Scripts.Assistant
         }
         private void Shake()
         {
-            if (!UserData.Instance.CSettingData.isShake) return;
+            if (!DataMono.Instance.CSettingData.isShake) return;
 #if !UNITY_EDITOR
         Handheld.Vibrate();
 #endif

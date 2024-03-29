@@ -27,17 +27,17 @@ namespace NutBolts.Scripts.UI.UISetting
         public void OnClick_Sound()
         {
             VKAudioController.Instance.PlaySound("Button");
-            UserData.Instance.CSettingData.isSound = !UserData.Instance.CSettingData.isSound;
+            DataMono.Instance.CSettingData.isSound = !DataMono.Instance.CSettingData.isSound;
             Refresh();
-            UserData.Instance.SaveLocalData();
+            DataMono.Instance.SaveLocalData();
         }
         public void OnClick_Music()
         {
             VKAudioController.Instance.PlaySound("Button");
-            UserData.Instance.CSettingData.isMusic = !UserData.Instance.CSettingData.isMusic;
+            DataMono.Instance.CSettingData.isMusic = !DataMono.Instance.CSettingData.isMusic;
             Refresh();
-            UserData.Instance.SaveLocalData();
-            if (UserData.Instance.CSettingData.isMusic)
+            DataMono.Instance.SaveLocalData();
+            if (DataMono.Instance.CSettingData.isMusic)
             {
                 VKAudioController.Instance.PlayMusic("game_music");
             }
@@ -49,27 +49,27 @@ namespace NutBolts.Scripts.UI.UISetting
         public void OnClick_Shake()
         {
             VKAudioController.Instance.PlaySound("Button");
-            UserData.Instance.CSettingData.isShake = !UserData.Instance.CSettingData.isShake;
+            DataMono.Instance.CSettingData.isShake = !DataMono.Instance.CSettingData.isShake;
             Refresh();
-            UserData.Instance.SaveLocalData();
+            DataMono.Instance.SaveLocalData();
         }
         public void OnClick_Close()
         {
             VKAudioController.Instance.PlaySound("Button");
-            VKAudioController.Instance.isMusicOn = UserData.Instance.CSettingData.isMusic;
-            VKAudioController.Instance.isSoundOn = UserData.Instance.CSettingData.isSound;   
+            VKAudioController.Instance.isMusicOn = DataMono.Instance.CSettingData.isMusic;
+            VKAudioController.Instance.isSoundOn = DataMono.Instance.CSettingData.isSound;   
             Close();
         }
         private void Refresh()
         {
-            soundBtn.GetChild(0).gameObject.SetActive(UserData.Instance.CSettingData.isSound);
-            soundBtn.GetChild(1).gameObject.SetActive(!UserData.Instance.CSettingData.isSound);
+            soundBtn.GetChild(0).gameObject.SetActive(DataMono.Instance.CSettingData.isSound);
+            soundBtn.GetChild(1).gameObject.SetActive(!DataMono.Instance.CSettingData.isSound);
 
-            musicBtn.GetChild(0).gameObject.SetActive(UserData.Instance.CSettingData.isMusic);
-            musicBtn.GetChild(1).gameObject.SetActive(!UserData.Instance.CSettingData.isMusic);
+            musicBtn.GetChild(0).gameObject.SetActive(DataMono.Instance.CSettingData.isMusic);
+            musicBtn.GetChild(1).gameObject.SetActive(!DataMono.Instance.CSettingData.isMusic);
 
-            shakeBtn.GetChild(0).gameObject.SetActive(UserData.Instance.CSettingData.isShake);
-            shakeBtn.GetChild(1).gameObject.SetActive(!UserData.Instance.CSettingData.isShake);
+            shakeBtn.GetChild(0).gameObject.SetActive(DataMono.Instance.CSettingData.isShake);
+            shakeBtn.GetChild(1).gameObject.SetActive(!DataMono.Instance.CSettingData.isShake);
         }
     }
 }

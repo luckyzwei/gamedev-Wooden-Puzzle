@@ -26,7 +26,7 @@ namespace NutBolts.Scripts.UI.UIMenu
         public override void ShowLayer()
         {
             base.ShowLayer();
-            if (UserData.Instance.CSettingData.isMusic)
+            if (DataMono.Instance.CSettingData.isMusic)
             {
                 VKAudioController.Instance.PlayMusic("game_music");
             }
@@ -34,7 +34,7 @@ namespace NutBolts.Scripts.UI.UIMenu
     
         public void OnClickPlay()
         {
-            LoadLevel(UserData.Instance.CGameData.CurrentLevel);
+            LoadLevel(DataMono.Instance.CGameData.Level);
         }
     
         private void LoadLevel(int levelIndex)

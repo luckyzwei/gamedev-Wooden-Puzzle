@@ -9,11 +9,11 @@ namespace NutBolts.Scripts.UI.UIGame
     {
         public GameObject videoObj;
         public GameObject normalObj;
-        public BoosterType boosterType;
-        private BoosterObj boosterObj;
+        public AbilityType boosterType;
+        private AbilityObj boosterObj;
         public void Initialized()
         {
-            boosterObj = UserData.Instance.GetBoosterObj(boosterType);
+            boosterObj = DataMono.Instance.GetBoosterObj(boosterType);
             RefreshBooster();
         }
         public void OnCick()
@@ -21,9 +21,9 @@ namespace NutBolts.Scripts.UI.UIGame
             VKAudioController.Instance.PlaySound("Button");
             if (boosterObj == null)
             {
-                boosterObj = UserData.Instance.GetBoosterObj(boosterType);
+                boosterObj = DataMono.Instance.GetBoosterObj(boosterType);
             }
-            if (boosterObj.number == 0)
+            if (boosterObj.count == 0)
             {
                 OnClickVideo();
             }
@@ -38,18 +38,18 @@ namespace NutBolts.Scripts.UI.UIGame
         }
         private void OnClickNormal()
         {
-            UserData.Instance.SubBooster(boosterType);
+            DataMono.Instance.SubBooster(boosterType);
             OnComplete();
             RefreshBooster();       
         }
         private void OnComplete()
         {
-            switch (boosterObj.boosterType)
+            switch (boosterObj.Type)
             {
-                case BoosterType.CReset: OnReset(); break;
-                case BoosterType.CTip: OnTips(); break;
-                case BoosterType.CTool: OnTool(); break;
-                case BoosterType.CPrevious: OnPrevious(); break;
+                case AbilityType.CReset: OnReset(); break;
+                case AbilityType.CTip: OnTips(); break;
+                case AbilityType.CTool: OnTool(); break;
+                case AbilityType.CPrevious: OnPrevious(); break;
             }
         }
   
@@ -71,7 +71,7 @@ namespace NutBolts.Scripts.UI.UIGame
         }
         public void RefreshBooster()
         {
-            if (boosterObj.number == 0)
+            if (boosterObj.count == 0)
             {
 
                 videoObj.SetActive(true);
@@ -81,7 +81,7 @@ namespace NutBolts.Scripts.UI.UIGame
             {
                 videoObj.SetActive(false);
                 normalObj.SetActive(true);
-                normalObj.transform.GetChild(0).GetComponent<Text>().text = boosterObj.number.ToString();
+                normalObj.transform.GetChild(0).GetComponent<Text>().text = boosterObj.count.ToString();
             }
         }
     }

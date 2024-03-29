@@ -1,71 +1,59 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using UnityEngine.Serialization;
 
 namespace NutBolts.Scripts.Data
 {
     public class GameData
     {
-        public int TotalCoin;
-        public int vip;
-        public int CurrentLevel;
-        public List<BoosterObj> Boosters;
-        public GameData(){
-            TotalCoin = 200;
-            vip = 0;
-            Boosters = new List<BoosterObj>
-            {
-                new() {number=2,boosterType=BoosterType.CReset},
-                new() {number=2,boosterType=BoosterType.CTool},
-                new() {number=2,boosterType=BoosterType.CTip},
-                new() {number=2,boosterType=BoosterType.CPrevious}
-            };
-        }
-        public void UseBooster(BoosterType type)
+        public int Coins { get; set; } = 200;
+        public int Level { get; set; }
+        public List<AbilityObj> Abilities {get;} = new() 
         {
-            for(int i=0; i<Boosters.Count; i++)
+            new() {count=2,Type=AbilityType.CReset},
+            new() {count=2,Type=AbilityType.CTool},
+            new() {count=2,Type=AbilityType.CTip},
+            new() {count=2,Type=AbilityType.CPrevious}
+        };
+
+        public void UseAbility(AbilityType type)
+        {
+            foreach (var t in Abilities.Where(t => t.Type == type))
             {
-                if (Boosters[i].boosterType == type)
-                {
-                    Boosters[i].number--;
-                    if (Boosters[i].number < 0) Boosters[i].number = 0;
-                    break;
-                }
+                t.count--;
+                if (t.count < 0) t.count = 0;
+                break;
             }
         }
-        public void AddBooster(BoosterObj booster)
+        public void AddAbility(AbilityObj booster)
         {
-            for (int i = 0; i < Boosters.Count; i++)
+            foreach (var t in Abilities)
             {
-                if (Boosters[i].boosterType == booster.boosterType)
+                if (t.Type == booster.Type)
                 {
-                    Boosters[i].number+=booster.number;               
+                    t.count+=booster.count;               
                     break;
                 }
             }
         }
     }
     
-    public class SettingData {
-        public bool isSound;
-        public bool isMusic;
-        public bool isShake;
-        public SettingData()
-        {
-            isSound = true;
-            isMusic = true;
-            isShake = true;
-        }
+    public class SettingInfo {
+        public bool isSound = true;
+        public bool isMusic = true;
+        public bool isShake = true;
     }
     
     [Serializable]
-    public class BoosterObj
+    public class AbilityObj
     {
-        public BoosterType boosterType;
-        public int number;
+        [FormerlySerializedAs("boosterType")] public AbilityType Type;
+        [FormerlySerializedAs("number")] public int count;
     }
     
     
-    public enum BoosterType
+    public enum AbilityType
     {
         CReset=0,
         CTool=1,
