@@ -2,11 +2,15 @@ using NutBolts.Scripts.Data;
 using UnityEngine;
 using VKSdk;
 using VKSdk.UI;
+using Zenject;
 
 namespace NutBolts.Scripts.UI.UIPause
 {
     public class UIPause : VKLayer
     {
+        [Inject] private VKAudioController _vkAudioController;
+        [Inject] private VKLayerController _vkLayerController;
+        [Inject] private DataMono _dataMono;
         [SerializeField] private Transform _soundToggle;
         [SerializeField] private Transform _musicToggle;
         [SerializeField] private Transform _shakeToggle;
@@ -19,57 +23,57 @@ namespace NutBolts.Scripts.UI.UIPause
     
         public void ChangeSound()
         {
-            VKAudioController.Instance.PlaySound("Button");
-            DataMono.Instance.SettingData.isSound = !DataMono.Instance.SettingData.isSound;
+            _vkAudioController.PlaySound("Button");
+            _dataMono.SettingData.isSound = !_dataMono.SettingData.isSound;
             Reset();
-            DataMono.Instance.SaveAll();
+            _dataMono.SaveAll();
         }
         public void MusicChange()
         {
-            VKAudioController.Instance.PlaySound("Button");
-            DataMono.Instance.SettingData.isMusic = !DataMono.Instance.SettingData.isMusic;
+            _vkAudioController.PlaySound("Button");
+            _dataMono.SettingData.isMusic = !_dataMono.SettingData.isMusic;
             Reset();
-            DataMono.Instance.SaveAll();
-            if (DataMono.Instance.SettingData.isMusic)
+            _dataMono.SaveAll();
+            if (_dataMono.SettingData.isMusic)
             {
-                VKAudioController.Instance.PlayMusic("game_music");
+                _vkAudioController.PlayMusic("game_music");
             }
             else
             {
-                VKAudioController.Instance.StopMusic(() => { });
+                _vkAudioController.StopMusic(() => { });
             }
         }
         public void ShakeChange()
         {
-            VKAudioController.Instance.PlaySound("Button");
-            DataMono.Instance.SettingData.isShake = !DataMono.Instance.SettingData.isShake;
+            _vkAudioController.PlaySound("Button");
+            _dataMono.SettingData.isShake = !_dataMono.SettingData.isShake;
             Reset();
-            DataMono.Instance.SaveAll();
+            _dataMono.SaveAll();
         }
         public void ClosePause()
         {
-            VKAudioController.Instance.PlaySound("Button");
+            _vkAudioController.PlaySound("Button");
             Close();
         }
         public void ReturnHome()
         {
-            VKAudioController.Instance.PlaySound("Button");
-            var uiGame = (UIGame.UIGameMenu)VKLayerController.Instance.GetLayer("UIGame");
+            _vkAudioController.PlaySound("Button");
+            var uiGame = (UIGame.UIGameMenu)_vkLayerController.GetLayer("UIGame");
             uiGame.Close();
             GameManager.instance.Reset();
-            VKLayerController.Instance.ShowLayer("UIMenu");
+            _vkLayerController.ShowLayer("UIMenu");
             Close();
         }
         private void Reset()
         {
-            _soundToggle.GetChild(0).gameObject.SetActive(DataMono.Instance.SettingData.isSound);
-            _soundToggle.GetChild(1).gameObject.SetActive(!DataMono.Instance.SettingData.isSound);
+            _soundToggle.GetChild(0).gameObject.SetActive(_dataMono.SettingData.isSound);
+            _soundToggle.GetChild(1).gameObject.SetActive(!_dataMono.SettingData.isSound);
 
-            _musicToggle.GetChild(0).gameObject.SetActive(DataMono.Instance.SettingData.isMusic);
-            _musicToggle.GetChild(1).gameObject.SetActive(!DataMono.Instance.SettingData.isMusic);
+            _musicToggle.GetChild(0).gameObject.SetActive(_dataMono.SettingData.isMusic);
+            _musicToggle.GetChild(1).gameObject.SetActive(!_dataMono.SettingData.isMusic);
 
-            _shakeToggle.GetChild(0).gameObject.SetActive(DataMono.Instance.SettingData.isShake);
-            _shakeToggle.GetChild(1).gameObject.SetActive(!DataMono.Instance.SettingData.isShake);
+            _shakeToggle.GetChild(0).gameObject.SetActive(_dataMono.SettingData.isShake);
+            _shakeToggle.GetChild(1).gameObject.SetActive(!_dataMono.SettingData.isShake);
         }
     }
 }

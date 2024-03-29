@@ -6,11 +6,13 @@ using UnityEngine;
 using UnityEngine.UI;
 using VKSdk.Notify;
 using VKSdk;
+using Zenject;
 
 namespace VKSdk.UI
 {
     public class VKLayerController : MonoBehaviour
     {
+        [Inject] private DiContainer _diContainer;
         public Camera uiCamera;
 
         public GameObject layerMiniMask;
@@ -249,7 +251,7 @@ namespace VKSdk.UI
                     }
                 }
 
-                obj = Instantiate(obj) as GameObject;
+                obj = _diContainer.InstantiatePrefab(obj);
                 sLayer = obj.GetComponent<VKLayer>();
 
                 // seting init

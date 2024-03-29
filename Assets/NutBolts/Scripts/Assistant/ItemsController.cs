@@ -1,13 +1,13 @@
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
+using Zenject;
 
 namespace NutBolts.Scripts.Assistant
 {
 	public class ItemsController : MonoBehaviour
 	{
-		public static ItemsController Instance;
-
+		[Inject] private DiContainer _diContainer;
 		[FormerlySerializedAs("cItems")] public List<Item> _mainItem;
 		[FormerlySerializedAs("cSubItems")] public List<Item> _items;
 
@@ -16,7 +16,6 @@ namespace NutBolts.Scripts.Assistant
 
 		private void Awake()
 		{
-			Instance = this;
 			_itemMap.Clear();
 			foreach (Item item in _mainItem)
 				_itemMap.Add(item._itemPrefab.name, item._itemPrefab);
@@ -26,12 +25,12 @@ namespace NutBolts.Scripts.Assistant
 
 		public T TakeItem<T>(string key) where T : Component
 		{
-			return (Instantiate(_itemMap[key])).GetComponent<T>();
+			return _diContainer.InstantiatePrefab(_itemMap[key]).GetComponent<T>();
 		}
 
 		public GameObject TakeItem(string key)
 		{
-			return Instantiate(_itemMap[key]);
+			return _diContainer.InstantiatePrefab(_itemMap[key]);
 		}
 		
 		public GameObject TakeItem(string key, Vector3 position)

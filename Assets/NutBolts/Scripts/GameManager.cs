@@ -7,14 +7,21 @@ using NutBolts.Scripts.Item;
 using NutBolts.Scripts.Targets;
 using NutBolts.Scripts.UI.UIGame;
 using UnityEngine;
-using UnityEngine.Serialization;
+using VKSdk;
 using VKSdk.Notify;
 using VKSdk.UI;
+using Zenject;
 
 namespace NutBolts.Scripts
 {
     public class GameManager : MonoBehaviour
     {
+        [Inject] private VKAudioController _vkAudioController;
+        [Inject] private VKNotifyController _vkNotifyController;
+        [Inject] private VKLayerController _vkLayerController;
+        [Inject] private ItemsController _itemsController;
+        [Inject] private ItemController _itemController;
+        [Inject] private DataMono _dataMono;
         public delegate void GameStateEvents();
         public static event GameStateEvents OnEnterGame;
         public static event GameStateEvents OnWin;
@@ -48,7 +55,7 @@ namespace NutBolts.Scripts
                     if (PlayerPrefs.GetInt("OpenLevelTest") <= 0)
                     {
                         Debug.LogWarning("OpenLevelTest failed");
-                        VKLayerController.Instance.ShowLayer("UIMenu");
+                        _vkLayerController.ShowLayer("UIMenu");
                     }
                     else
                     {
@@ -88,8 +95,8 @@ namespace NutBolts.Scripts
             if (level == 0)
             {
                 level = 1;
-                DataMono.Instance.Data.Level = 1;
-                DataMono.Instance.SaveAll();
+                _dataMono.Data.Level = 1;
+                _dataMono.SaveAll();
             }     
             LoadDataFromLocal(level);
         }
@@ -122,7 +129,7 @@ namespace NutBolts.Scripts
             GenerateLit();
             Invoke("GenerateItem", 0.1f);
             Invoke("LoadLevelCompleted", 0.5f);
-            var uiGame =(UIGameMenu) VKLayerController.Instance.ShowLayer("UIGame");
+            var uiGame =(UIGameMenu) _vkLayerController.ShowLayer("UIGame");
             int second=300;
             if (_targetLevel.targets.Length > 1)
             {
@@ -156,7 +163,7 @@ namespace NutBolts.Scripts
                     position = new Vector3();
                     position.x = -_litOffset * (0.5f * (Field.Width - 1) - x);
                     position.y = -_litOffset * (-0.5f * (Field.Height - 1) + y);
-                    o = ItemsController.Instance.TakeItem("LitEmpty", position);
+                    o = _itemsController.TakeItem("LitEmpty", position);
                     o.name = "Lit_" + y + "x" + x;
                     o.transform.parent = _litPrefab.transform;
                     s = o.GetComponent<Fire>();
@@ -221,7 +228,7 @@ namespace NutBolts.Scripts
                 float angle = Vector2.Angle(Vector2.up,dir);
                 Vector3 cross = Vector3.Cross(Vector3.up, (Vector3)dir).normalized;
            
-                Blocks o = ItemsController.Instance.TakeItem<Blocks>(Field.Sides[i].prefabName);
+                Blocks o = _itemsController.TakeItem<Blocks>(Field.Sides[i].prefabName);
                 o.name = "Item_" + i.ToString();
                 o.transform.SetParent(_itemPrefab.transform, true);
                 bool oneDirect = (!o._xScale || !o._yScale) && (o._yScale || o._xScale);
@@ -260,7 +267,7 @@ namespace NutBolts.Scripts
                 o.transform.position = pos;
             
                 float length = (end-start).magnitude + tail /2+head/2;
-                o.Construct(Field.Sides[i],rigids,length,i,dir.normalized,head,tail);
+                o.Construct(Field.Sides[i], rigids, length, i, dir.normalized, head, tail);
                 o.OnFloorHit += BarHit;
            
             
@@ -302,7 +309,7 @@ namespace NutBolts.Scripts
 
         private Screw ScrewTake( Vector3 pos, int id)
         {
-            GameObject o = ItemsController.Instance.TakeItem("screw");
+            GameObject o = _itemsController.TakeItem("screw");
             o.transform.position = pos;
             o.name = "Screw_"+id;
             Screw screw = o.GetComponent<Screw>();
@@ -312,7 +319,7 @@ namespace NutBolts.Scripts
 
         private ScrewHole SpawnHole(Vector3 pos, int id)
         {
-            GameObject o = ItemsController.Instance.TakeItem("hole");
+            GameObject o = _itemsController.TakeItem("hole");
             o.transform.position = pos;
             o.name = "Hole_" + id;
             ScrewHole h= o.GetComponent<ScrewHole>();
@@ -334,11 +341,11 @@ namespace NutBolts.Scripts
 
         private void LoadLevelCompleted()
         {
-            VKLayerController.Instance.HideLoading();
+            _vkLayerController.HideLoading();
         }
         public void NextLevelCompleted()
         {
-            VKLayerController.Instance.HideLoading();
+            _vkLayerController.HideLoading();
         }
         public void Reset()
         {
@@ -350,13 +357,13 @@ namespace NutBolts.Scripts
 
         private void GoHome()
         {
-            var uiMenu = VKLayerController.Instance.GetLayer("UIMenu");
+            var uiMenu = _vkLayerController.GetLayer("UIMenu");
             OnClose();
         }
 
         private void OnClose()
         {
-            var uiGame = (UIGameMenu)VKLayerController.Instance.GetLayer("UIGame");
+            var uiGame = (UIGameMenu)_vkLayerController.GetLayer("UIGame");
             uiGame.Close();
         }
 
@@ -373,23 +380,23 @@ namespace NutBolts.Scripts
                 {
                     PlayerPrefs.SetInt("OpenTipTest", 0);
                     TipStore();
-                    ItemController.Instance.Construct();
+                    _itemController.Construct();
                 }
                 if (OnWin != null)
                 {
                     OnWin();
-                    DataMono.Instance.Data.Level++;
-                    DataMono.Instance.SaveAll();
+                    _dataMono.Data.Level++;
+                    _dataMono.SaveAll();
                 }
            
             }
-            VKSdk.VKAudioController.Instance.PlaySound("Drop");
+            _vkAudioController.PlaySound("Drop");
             StartCoroutine(RemoveTimer(obstacle));
         }
 
         private IEnumerator RemoveTimer(Blocks obstacle)
         {
-            yield return new WaitUntil(() => ItemController.Instance._screwState == ScrewState.Waiting);
+            yield return new WaitUntil(() => _itemController._screwState == ScrewState.Waiting);
             Field.RemoveSide(obstacle.ObstacleSide.id);
         }
         public void OnMove()
@@ -397,7 +404,7 @@ namespace NutBolts.Scripts
             if (Field.Moves.Count == 0)
             {
                 Field = new GameBoard(LevelObject);
-                VKNotifyController.Instance.AddNotify("Previous is empty",
+                _vkNotifyController.AddNotify("Previous is empty",
                     VKNotifyController.TypeNotify.Error);
                 return;
             }
@@ -419,7 +426,7 @@ namespace NutBolts.Scripts
                 }
             }
             collect = _targetLevel.targets[0].amount - FindObjectsOfType<Blocks>().Length;
-            ItemController.Instance.Control();
+            _itemController.Control();
             Field.Moves.RemoveAt(Field.Moves.Count - 1);
             Field.Histories.Remove(move);
         
@@ -431,14 +438,14 @@ namespace NutBolts.Scripts
             PlayerPrefs.SetInt("OpenLevel", level);
             ConstructLevel();
             Status = GameState.PrepareGame;
-            VKLayerController.Instance.ShowLoading();
+            _vkLayerController.ShowLoading();
             Invoke("NextLevelCompleted",0.3f);
         }
         public void PlayTip()
         {
             RemovePeoplePopulation();
             ConstructLevel();
-            VKLayerController.Instance.ShowLoading();
+            _vkLayerController.ShowLoading();
             Status = GameState.PrepareGame;
             Invoke("TipRevert", 0.5f);
         }
@@ -448,11 +455,11 @@ namespace NutBolts.Scripts
         }
         public void OnReplayLevel()
         {
-            var uiGame = VKLayerController.Instance.GetLayer("UIGame");
+            var uiGame = _vkLayerController.GetLayer("UIGame");
             uiGame.Close();
             RemovePeoplePopulation();
             ConstructLevel();
-            VKLayerController.Instance.ShowLoading();
+            _vkLayerController.ShowLoading();
             Status = GameState.PrepareGame;
             Invoke("LoadLevelCompleted", 0.5f);
         }
@@ -506,7 +513,7 @@ namespace NutBolts.Scripts
         private void TipStore()
         {
             int length = LevelObject.tipPaths.Count;
-            List<int> History = ItemController.Instance.Histories;
+            List<int> History = _itemController.Histories;
             if (History.Count < length || length==0)
             {
                 LevelObject.tipPaths = new List<int>(History);

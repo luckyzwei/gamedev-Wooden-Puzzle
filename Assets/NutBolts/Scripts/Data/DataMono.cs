@@ -5,23 +5,12 @@ namespace NutBolts.Scripts.Data
     public class DataMono : MonoBehaviour
     {
         private static DataMono instance;
-        public static DataMono Instance
-        {
-            get 
-            {
-                if (instance != null) return instance;
-                
-                GameObject go = new GameObject("UserData");
-                instance = go.AddComponent<DataMono>();
-                instance.LoadSaved();
-                return instance; 
-            }
-        }
+        //public static DataMono Instance;
         public  GameData Data { get; private set; }
         public  SettingInfo SettingData { get; private set; }
         private void Awake()
         {
-            DontDestroyOnLoad(this);
+            LoadSaved();
         }
         
         public void AddAbility(AbilityObj ani)

@@ -3,12 +3,15 @@ using UnityEngine;
 using UnityEngine.UI;
 using VKSdk;
 using VKSdk.UI;
+using Zenject;
 
 namespace NutBolts.Scripts.UI.UIWin
 {
     public class UIWin : VKLayer
     {
-        
+        [Inject] private VKAudioController _vkAudioController;
+        [Inject] private VKLayerController _vkLayerController;
+        [Inject] private DataMono _dataMono;
         [SerializeField] private Text _levelText;
         private LevelObject _levelObj;
         [SerializeField] private VKInfiniteScroll _scroll;
@@ -21,17 +24,17 @@ namespace NutBolts.Scripts.UI.UIWin
         }
         public void OpenNextLevel()
         {
-            VKAudioController.Instance.PlaySound("Button");
+            _vkAudioController.PlaySound("Button");
             GameManager.instance.LoadNextLevel();
             Close();
         }
         public void HomeButton() //TODO fix
         {
-            VKAudioController.Instance.PlaySound("Button");
-            var uiGame = (UIGame.UIGameMenu)VKLayerController.Instance.GetLayer("UIGame");
-            uiGame.Close();
+            _vkAudioController.PlaySound("Button");
+            //var uiGame = (UIGame.UIGameMenu)_vkLayerController.GetLayer("UIGame");
+            //uiGame.Close();
             GameManager.instance.Reset();
-            VKLayerController.Instance.ShowLayer("UIMenu");
+            _vkLayerController.ShowLayer("UIMenu");
             Close();
         }
         public void Construct()
@@ -48,15 +51,15 @@ namespace NutBolts.Scripts.UI.UIWin
                 AbilityObj b = _levelObj.rewards[i].ConvertRewardToBooster();
                 if (b == null)
                 {
-                    DataMono.Instance.Data.Coins += _levelObj.rewards[i].amount;
+                    _dataMono.Data.Coins += _levelObj.rewards[i].amount;
                 }
                 else
                 {
-                    DataMono.Instance.AddAbility(b);
+                    _dataMono.AddAbility(b);
                 }
             }
-            DataMono.Instance.SaveAll();
-            VKAudioController.Instance.PlaySound("Cheers");
+            _dataMono.SaveAll();
+            _vkAudioController.PlaySound("Cheers");
         }
 
         private void AddReward(int index, GameObject go)

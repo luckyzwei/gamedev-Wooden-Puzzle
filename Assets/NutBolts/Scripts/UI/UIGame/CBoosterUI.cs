@@ -3,25 +3,27 @@ using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
 using VKSdk;
+using Zenject;
 
 namespace NutBolts.Scripts.UI.UIGame
 {
     public class CBoosterUI : MonoBehaviour
     {
-         
+        [Inject] private VKAudioController _vkAudioController;
+        [Inject] private DataMono _dataMono;
         [FormerlySerializedAs("videoObj")] [SerializeField] private GameObject _forVideo;
         [FormerlySerializedAs("normalObj")] [SerializeField] private GameObject _normal;
         [FormerlySerializedAs("boosterType")] [SerializeField] private AbilityType _type;
         private AbilityObj _booster;
         public void Construct()
         {
-            _booster = DataMono.Instance.GetAbilityObj(_type);
+            _booster = _dataMono.GetAbilityObj(_type);
             ResetBooster();
         }
         public void UseAbility()
         {
-            VKAudioController.Instance.PlaySound("Button");
-            _booster ??= DataMono.Instance.GetAbilityObj(_type);
+            _vkAudioController.PlaySound("Button");
+            _booster ??= _dataMono.GetAbilityObj(_type);
             if (_booster.count == 0)
             {
                 Video();
@@ -37,7 +39,7 @@ namespace NutBolts.Scripts.UI.UIGame
         }
         private void SimpleUse()
         {
-            DataMono.Instance.SubAbility(_type);
+            _dataMono.SubAbility(_type);
             OnComplete();
             ResetBooster();       
         }

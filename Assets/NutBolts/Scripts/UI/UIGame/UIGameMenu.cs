@@ -3,11 +3,14 @@ using UnityEngine;
 
 using VKSdk;
 using VKSdk.UI;
+using Zenject;
 
 namespace NutBolts.Scripts.UI.UIGame
 {
     public class UIGameMenu : VKLayer
     {
+        [Inject] private VKAudioController _vkAudioController;
+        [Inject] private VKLayerController _vkLayerController;
         [SerializeField] private VKCountDownLite _countDown;
         [SerializeField] private CBoosterUI[] _abilities;
         [SerializeField] private TextMeshProUGUI _levelText;
@@ -41,8 +44,8 @@ namespace NutBolts.Scripts.UI.UIGame
         #region Listenner
         public void OpenSettings()
         {
-            VKLayerController.Instance.ShowLayer("UIPause");
-            VKAudioController.Instance.PlaySound("Button");
+            _vkLayerController.ShowLayer("UIPause");
+            _vkAudioController.PlaySound("Button");
         }
 
         #endregion
@@ -51,14 +54,14 @@ namespace NutBolts.Scripts.UI.UIGame
         private void Wictory()
         {
             Clear();
-            var uiWin = (UIWin.UIWin)VKLayerController.Instance.ShowLayer("UIWin");
+            var uiWin = (UIWin.UIWin)_vkLayerController.ShowLayer("UIWin");
             uiWin.Construct();
         }
 
         private void GameLose()
         {
-            VKAudioController.Instance.PlaySound($"Game_over_{Random.Range(1, 3)}");
-            VKLayerController.Instance.ShowLayer("UIFail");
+            _vkAudioController.PlaySound($"Game_over_{Random.Range(1, 3)}");
+            _vkLayerController.ShowLayer("UIFail");
         }
 
         private void Clear()

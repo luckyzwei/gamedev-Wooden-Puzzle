@@ -3,11 +3,15 @@ using NutBolts.Scripts.Data;
 using UnityEngine;
 using VKSdk;
 using VKSdk.UI;
+using Zenject;
 
 namespace NutBolts.Scripts.UI.UIMenu
 {
     public class UIMenu : VKLayer
     {
+        [Inject] private VKAudioController _vkAudioController;
+        [Inject] private VKLayerController _vkLayerController;
+        [Inject] private DataMono _dataMono;
         [SerializeField] private List<LevelButton> _levelButtons;
         private void Start()
         {
@@ -27,21 +31,21 @@ namespace NutBolts.Scripts.UI.UIMenu
         public override void ActivateLayer()
         {
             base.ActivateLayer();
-            if (DataMono.Instance.SettingData.isMusic)
+            if (_dataMono.SettingData.isMusic)
             {
-                VKAudioController.Instance.PlayMusic("game_music");
+                _vkAudioController.PlayMusic("game_music");
             }
         }
     
         public void Play()
         {
-            LoadLevel(DataMono.Instance.Data.Level);
+            LoadLevel(_dataMono.Data.Level);
         }
     
         private void LoadLevel(int levelIndex)
         {
-            VKAudioController.Instance.PlaySound("Button");
-            VKLayerController.Instance.ShowLoading();
+            _vkAudioController.PlaySound("Button");
+            _vkLayerController.ShowLoading();
             PlayerPrefs.SetInt("OpenLevel", levelIndex);
             GameManager.instance.ConstructLevel();
             GameManager.@this.Status = GameState.PrepareGame;
@@ -49,8 +53,8 @@ namespace NutBolts.Scripts.UI.UIMenu
         }
         public void OpenSettings()
         {
-            VKAudioController.Instance.PlaySound("Button");
-            VKLayerController.Instance.ShowLayer("UISetting");
+            _vkAudioController.PlaySound("Button");
+            _vkLayerController.ShowLayer("UISetting");
         }
 
     }

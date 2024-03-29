@@ -3,12 +3,15 @@ using System.Linq;
 using NutBolts.Scripts.Data;
 using NutBolts.Scripts.Item;
 using UnityEngine;
+using VKSdk;
+using Zenject;
 
 namespace NutBolts.Scripts.Assistant
 {
     public class ItemController : MonoBehaviour
     {
-        public static ItemController Instance;
+        [Inject] private DataMono _dataMono;
+        [Inject] private VKAudioController _vkAudioController;
         private float _errorTime = 0.025f;
         private Screw _selectScrew;
         public ScrewState _screwState { get; private set; } = ScrewState.Normal;
@@ -16,7 +19,6 @@ namespace NutBolts.Scripts.Assistant
 
         private void Start()
         {
-            Instance = this;
             if (PlayerPrefs.GetInt("OpenTipTest", 0)!=0)
             {
                 Construct();
@@ -88,7 +90,7 @@ namespace NutBolts.Scripts.Assistant
                 }
                 else
                 {
-                    VKSdk.VKAudioController.Instance.PlaySound("Wrong_match");
+                    _vkAudioController.PlaySound("Wrong_match");
                     PlaceBackScrew();
                 }
             }
@@ -183,7 +185,7 @@ namespace NutBolts.Scripts.Assistant
         }
         private void Shake()
         {
-            if (!DataMono.Instance.SettingData.isShake) return;
+            if (!_dataMono.SettingData.isShake) return;
 #if !UNITY_EDITOR
         Handheld.Vibrate();
 #endif

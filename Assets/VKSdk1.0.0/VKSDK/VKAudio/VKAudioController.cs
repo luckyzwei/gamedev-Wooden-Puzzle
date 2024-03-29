@@ -4,11 +4,13 @@ using System.Collections.Generic;
 using System.Linq;
 using NutBolts.Scripts.Data;
 using UnityEngine;
+using Zenject;
 
 namespace VKSdk
 {
     public class VKAudioController : MonoBehaviour
     {
+        [Inject] private DataMono _dataMono;
         public const string PATH = "Sounds/";
 
         #region Properties
@@ -62,8 +64,8 @@ namespace VKSdk
             }
 
             audioCaches = new List<AudioClip>();
-            VKAudioController.Instance.isMusicOn = DataMono.Instance.SettingData.isMusic;
-            VKAudioController.Instance.isSoundOn = DataMono.Instance.SettingData.isSound;
+            VKAudioController.Instance.isMusicOn = _dataMono.SettingData.isMusic;
+            VKAudioController.Instance.isSoundOn = _dataMono.SettingData.isSound;
             DontDestroyOnLoad(this.gameObject);
         }
 

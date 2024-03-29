@@ -4,11 +4,15 @@ using NutBolts.Scripts.Assistant;
 using NutBolts.Scripts.Data;
 using UnityEngine;
 using UnityEngine.Serialization;
+using VKSdk;
+using Zenject;
 
 namespace NutBolts.Scripts.Item
 {
     public class Blocks : MonoBehaviour
     {
+        [Inject] private ItemsController _itemsController;
+        [Inject] private VKAudioController _vkAudioController;
         [FormerlySerializedAs("offset")] [SerializeField] private  Vector2 _offSet;
         [FormerlySerializedAs("attractRigid")] [SerializeField] private Rigidbody2D _rigidbody;
         [FormerlySerializedAs("ScaleX")] public bool _xScale;
@@ -41,7 +45,7 @@ namespace NutBolts.Scripts.Item
         }
         private void OnCollisionEnter2D(Collision2D collision)
         {
-            VKSdk.VKAudioController.Instance.PlaySound($"drop{UnityEngine.Random.Range(1, 3)}");
+            _vkAudioController.PlaySound($"drop{UnityEngine.Random.Range(1, 3)}");
         }
         public void Construct(Side side,List<Rigidbody2D> screwRigidbody,float maxLength, int Index,Vector3 dir, float head, float tail)
         {
@@ -74,7 +78,7 @@ namespace NutBolts.Scripts.Item
                 hingleJoint.connectedBody = screwRigidbody[i];
                 _keyInts.Add(key);
                 _joints.Add(key.ToString(), hingleJoint);
-                var maskCircle = ItemsController.Instance.TakeItem("circle", screwRigidbody[i].transform.position+Vector3.forward,Quaternion.identity);
+                var maskCircle = _itemsController.TakeItem("circle", screwRigidbody[i].transform.position+Vector3.forward,Quaternion.identity);
                 maskCircle.transform.SetParent(transform, true);
                 maskCircle.GetComponent<CircleRound>().Construct(Index);
                 _maskList.Add(maskCircle);
