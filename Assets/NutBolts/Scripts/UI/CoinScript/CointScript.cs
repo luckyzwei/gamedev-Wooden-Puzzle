@@ -16,7 +16,7 @@ namespace NutBolts.Scripts.UI.CoinScript
 
         private void Update()
         {
-            Coin = DataMono.Instance.CGameData.Coins;
+            Coin = DataMono.Instance.Data.Coins;
             textCoin.text = Coin.ToString("N0");
         }
     }

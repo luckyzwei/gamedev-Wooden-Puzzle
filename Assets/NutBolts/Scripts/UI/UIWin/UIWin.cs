@@ -47,14 +47,14 @@ namespace NutBolts.Scripts.UI.UIWin
                 AbilityObj b = _levelObj.rewards[i].ConvertRewardToBooster();
                 if (b == null)
                 {
-                    DataMono.Instance.CGameData.Coins += _levelObj.rewards[i].amount;
+                    DataMono.Instance.Data.Coins += _levelObj.rewards[i].amount;
                 }
                 else
                 {
-                    DataMono.Instance.AddBooster(b);
+                    DataMono.Instance.AddAbility(b);
                 }
             }
-            DataMono.Instance.SaveLocalData();
+            DataMono.Instance.SaveAll();
             VKAudioController.Instance.PlaySound("Cheers");
         }
 

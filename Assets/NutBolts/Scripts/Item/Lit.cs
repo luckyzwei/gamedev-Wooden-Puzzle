@@ -6,33 +6,14 @@ namespace NutBolts.Scripts.Item
     {
         public int iIndex;
         public GameObject lightObject;
-        private Screw screw;
-        private Hole hole;
-        void Start()
+        public Screw Screw { get; set; }
+        public bool IsActive { get => lightObject.activeSelf; set => lightObject.SetActive(value); }
+
+        private void Start()
         {
-            TurnOff();
+            IsActive = false;
         }
         
-        public void SetScrew(Screw sc)
-        {
-            screw = sc;
-        }
-        public void SetHole(Hole h)
-        {
-            hole = h;
-        }
-        public Screw GetScrew()
-        {
-            return screw;
-        }
-        public Hole GetHole()
-        {
-            return hole;
-        }
-        public void TurnOn()
-        {
-            lightObject.SetActive(true);
-        }
         public void TurnOff()
         {
             lightObject.SetActive(false);

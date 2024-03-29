@@ -42,13 +42,13 @@ namespace NutBolts.Scripts.Assistant
             {
                 if (holeHit.collider.CompareTag("Hole"))
                 {
-                    OnHoleTouch(null, holeHit.collider.GetComponent<Hole>());
+                    OnHoleTouch(null, holeHit.collider.GetComponent<ScrewHole>());
                     return;
                 }             
             }
 
             if (_screwState != ScrewState.Waiting || mainhit.collider) return;
-            Hole h = null;
+            ScrewHole h = null;
             bool result = true;
             if (hitAll.Length >= 2)
             {
@@ -76,7 +76,7 @@ namespace NutBolts.Scripts.Assistant
                     {
                         if (hitAll[i].collider.CompareTag("Hole"))
                         {
-                            h = hitAll[i].collider.GetComponent<Hole>();
+                            h = hitAll[i].collider.GetComponent<ScrewHole>();
                             break;
                         }
                     }
@@ -96,38 +96,15 @@ namespace NutBolts.Scripts.Assistant
             {
                 if (!hitAll[0].collider.CompareTag("Hole") || itemHits.Length != 0) return;
                     
-                h = hitAll[0].collider.GetComponent<Hole>();
+                h = hitAll[0].collider.GetComponent<ScrewHole>();
                 OnHoleTouch(_selectScrew, h);
             }
         }
 
-        private void OnHoleTouch(Screw screw, Hole height)
+        private void OnHoleTouch(Screw screw, ScrewHole height)
         {
-            if (screw == null)
-            {
-                if (height.isVideo)
-                {
-                    height.isVideo = false;
-                    return;
-                }
-
-                if (!height.isCoin) return;
-                CLevelManager.Instance.ClickCoinHole(height);
-                return;
-            }
-            if (height.isVideo)
-            {
-                height.isVideo = false;
-                return;
-            }
-
-            if (height.isCoin)
-            {
-                CLevelManager.Instance.ClickCoinHole(height);
-                return;
-            }
             _screwState = ScrewState.Normal;
-            UseBuster(height.GetLit());
+            UseBuster(height.Lit);
             SaveTip(screw, height);
             screw.OnMove(screw, height);
             Shake();
@@ -182,10 +159,10 @@ namespace NutBolts.Scripts.Assistant
         {
             if (CLevelManager.FLAG_TOOLS)
             {
-                if (l.GetScrew())
+                if (l.Screw)
                 {
-                    l.GetScrew().OnRelease();
-                    l.GetScrew().DeActivate();
+                    l.Screw.OnRelease();
+                    l.Screw.DeActivate();
                     CLevelManager.Instance.TurnOffTool();
                     _selectScrew = null;
                 }
@@ -197,18 +174,18 @@ namespace NutBolts.Scripts.Assistant
             }
         }
 
-        private void SaveTip(Screw screw, Hole height)
+        private void SaveTip(Screw screw, ScrewHole height)
         {
             if (PlayerPrefs.GetInt("OpenTipTest", 0) != 0)
             {
                 Histories.Add(screw.GetLit().iIndex);
-                Histories.Add(height.GetLit().iIndex);
+                Histories.Add(height.Lit.iIndex);
 
             }       
         }
         private void Shake()
         {
-            if (!DataMono.Instance.CSettingData.isShake) return;
+            if (!DataMono.Instance.SettingData.isShake) return;
 #if !UNITY_EDITOR
         Handheld.Vibrate();
 #endif

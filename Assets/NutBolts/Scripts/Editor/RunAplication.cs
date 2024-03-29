@@ -7,17 +7,16 @@ using UnityEngine.SceneManagement;
 namespace NutBolts.Scripts.Editor
 {
     [InitializeOnLoad]
-    public class Autorun
+    public class RunAplication
     {
-        static Autorun()
+        static RunAplication()
         {
-            EditorApplication.update += InitProject;
-
+            EditorApplication.update += InitializeAll;
         }
 
-        static void InitProject()
+        private static void InitializeAll()
         {
-            EditorApplication.update -= InitProject;
+            EditorApplication.update -= InitializeAll;
             if (EditorApplication.timeSinceStartup < 10 || !EditorPrefs.GetBool(Application.dataPath + "AlreadyOpened"))
             {
                 if (SceneManager.GetActiveScene().name != "game" && Directory.Exists("Assets/NutBolts/Scenes"))

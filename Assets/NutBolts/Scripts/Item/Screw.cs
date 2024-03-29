@@ -6,7 +6,7 @@ namespace NutBolts.Scripts.Item
 {
     public class Screw : MonoBehaviour
     {
-        public Action<Screw,Hole> OnMove;
+        public Action<Screw,ScrewHole> OnMove;
         public Animator animator;
         private CircleCollider2D circleCollider;
         private List<Obstacle> joints;

@@ -62,8 +62,8 @@ namespace VKSdk
             }
 
             audioCaches = new List<AudioClip>();
-            VKAudioController.Instance.isMusicOn = DataMono.Instance.CSettingData.isMusic;
-            VKAudioController.Instance.isSoundOn = DataMono.Instance.CSettingData.isSound;
+            VKAudioController.Instance.isMusicOn = DataMono.Instance.SettingData.isMusic;
+            VKAudioController.Instance.isSoundOn = DataMono.Instance.SettingData.isSound;
             DontDestroyOnLoad(this.gameObject);
         }
 

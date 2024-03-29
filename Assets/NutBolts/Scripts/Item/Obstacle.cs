@@ -83,7 +83,7 @@ public class Obstacle : MonoBehaviour
             hingleJoint2DList.Add(key.ToString(), hingleJoint);
             var maskCircle = ItemsController.Instance.TakeItem("circle", screwRigidbody[i].transform.position+Vector3.forward,Quaternion.identity);
             maskCircle.transform.SetParent(transform, true);
-            maskCircle.GetComponent<Circle>().Init(Index);
+            maskCircle.GetComponent<CircleRound>().Construct(Index);
             maskCircleList.Add(maskCircle);
            
         }
@@ -206,7 +206,7 @@ public class Obstacle : MonoBehaviour
             foreach(int d in obstacleSide.dots)
             {
                 var hingleJoint = gameObject.AddComponent<HingeJoint2D>();
-                var sc = CLevelManager.Instance.GetLit(d).GetScrew();
+                var sc = CLevelManager.Instance.GetLit(d).Screw;
                 var p= transform.InverseTransformPoint(sc.transform.position);
                 hingleJoint.connectedBody = sc.rigidboy2D;
                 hingleJoint.connectedAnchor= p;

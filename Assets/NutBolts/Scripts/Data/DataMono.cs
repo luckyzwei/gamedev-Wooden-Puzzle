@@ -13,31 +13,30 @@ namespace NutBolts.Scripts.Data
                 
                 GameObject go = new GameObject("UserData");
                 instance = go.AddComponent<DataMono>();
-                instance.LoadLocalData();
+                instance.LoadSaved();
                 return instance; 
             }
         }
-        public  GameData CGameData { get; private set; }
-        public  SettingInfo CSettingData { get; private set; }
+        public  GameData Data { get; private set; }
+        public  SettingInfo SettingData { get; private set; }
         private void Awake()
         {
             DontDestroyOnLoad(this);
         }
-
-
-        public void AddBooster(AbilityObj boosterObj)
+        
+        public void AddAbility(AbilityObj ani)
         {
-            CGameData.AddAbility(boosterObj);
-            SaveLocalData();
+            Data.AddAbility(ani);
+            SaveAll();
         }
-        public void SubBooster(AbilityType boostertype)
+        public void SubAbility(AbilityType type)
         {
-            CGameData.UseAbility(boostertype);
-            SaveLocalData();
+            Data.UseAbility(type);
+            SaveAll();
         }
-        public AbilityObj GetBoosterObj(AbilityType type)
+        public AbilityObj GetAbilityObj(AbilityType type)
         {
-            foreach (var t in CGameData.Abilities)
+            foreach (var t in Data.Abilities)
             {
                 if (t.Type == type)
                 {
@@ -47,33 +46,33 @@ namespace NutBolts.Scripts.Data
 
             return null;
         }
-        private void LoadLocalData()
+        private void LoadSaved()
         {
             string jsonString = PlayerPrefs.GetString("GameData", "");
             if (jsonString == string.Empty)
             {
-                CGameData = new GameData();
+                Data = new GameData();
             }
             else
             {
-                CGameData = JsonUtility.FromJson<GameData>(jsonString);
+                Data = JsonUtility.FromJson<GameData>(jsonString);
             }
             string jsonSettingString = PlayerPrefs.GetString("SettingData", "");
             if (jsonSettingString == string.Empty)
             {
-                CSettingData = new SettingInfo();
+                SettingData = new SettingInfo();
             }
             else
             {
-                CSettingData = JsonUtility.FromJson<SettingInfo>(jsonSettingString);
+                SettingData = JsonUtility.FromJson<SettingInfo>(jsonSettingString);
            
             }
-            SaveLocalData();     
+            SaveAll();     
         }
-        public void SaveLocalData()
+        public void SaveAll()
         {
-            string jsonString = JsonUtility.ToJson(CGameData);
-            string jsonSettingStr = JsonUtility.ToJson(CSettingData);
+            string jsonString = JsonUtility.ToJson(Data);
+            string jsonSettingStr = JsonUtility.ToJson(SettingData);
             PlayerPrefs.SetString("GameData",jsonString);
             PlayerPrefs.SetString("SettingData", jsonSettingStr);
         }

@@ -13,6 +13,7 @@ namespace NutBolts.Scripts.UI.UIMenu
         {
             for (var i = 0; i < _levelButtons.Count; i++)
             {
+                if(_levelButtons[i] == null) return;
                 int levelIndex = i;
                 _levelButtons[i].Assign(i+1);
                 _levelButtons[i].Button.onClick.AddListener((() =>
@@ -26,7 +27,7 @@ namespace NutBolts.Scripts.UI.UIMenu
         public override void ShowLayer()
         {
             base.ShowLayer();
-            if (DataMono.Instance.CSettingData.isMusic)
+            if (DataMono.Instance.SettingData.isMusic)
             {
                 VKAudioController.Instance.PlayMusic("game_music");
             }
@@ -34,7 +35,7 @@ namespace NutBolts.Scripts.UI.UIMenu
     
         public void OnClickPlay()
         {
-            LoadLevel(DataMono.Instance.CGameData.Level);
+            LoadLevel(DataMono.Instance.Data.Level);
         }
     
         private void LoadLevel(int levelIndex)

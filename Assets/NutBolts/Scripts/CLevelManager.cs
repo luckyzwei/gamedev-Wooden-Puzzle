@@ -91,8 +91,8 @@ namespace NutBolts.Scripts
             if (LEVEL == 0)
             {
                 LEVEL = 1;
-                DataMono.Instance.CGameData.Level = 1;
-                DataMono.Instance.SaveLocalData();
+                DataMono.Instance.Data.Level = 1;
+                DataMono.Instance.SaveAll();
             }     
             LoadDataFromLocal(LEVEL);
         
@@ -171,16 +171,13 @@ namespace NutBolts.Scripts
                     
                     if (gameField.s[y, x] <= 4 )
                     {
-                        Hole h = GetNewHole(position, s.iIndex);
-                        h.isCoin = (gameField.s[y, x] == 4);
-                        h.isVideo = (gameField.s[y, x] == 3);
+                        ScrewHole h = GetNewHole(position, s.iIndex);
                         h.transform.SetParent(s.transform, true);
-                        s.SetHole(h);
-                        h.SetLit(s);
+                        h.Lit = s;
 
                         Screw sc = GetNewScrew(position, s.iIndex);
                         sc.transform.SetParent(s.transform, true);
-                        s.SetScrew(sc);
+                        s.Screw = sc;
                         sc.OnMove += OnMoveToLit;
                         sc.SetLit(s);
                         if (gameField.s[y, x] == 1)
@@ -248,10 +245,10 @@ namespace NutBolts.Scripts
 
                     var s = GetLit(gameField.sides[i].dots[j]);
                     pos += (Vector2)s.transform.position;
-                    if (s.GetScrew())
+                    if (s.Screw)
                     {
-                        rigids.Add(s.GetScrew().rigidboy2D);
-                        s.GetScrew().SetJoints(o);
+                        rigids.Add(s.Screw.rigidboy2D);
+                        s.Screw.SetJoints(o);
                     }
                     if (Vector2.Distance(start, (Vector2)s.transform.position)>maxC)
                     {
@@ -276,9 +273,9 @@ namespace NutBolts.Scripts
             }
         }
 
-        private void OnMoveToLit(Screw sc,Hole h)
+        private void OnMoveToLit(Screw sc,ScrewHole h)
         {
-            string move=string.Format("{0}_{1}:{2}",gameField.Histories.Count, sc.GetLit().iIndex, h.GetLit().iIndex);
+            string move=string.Format("{0}_{1}:{2}",gameField.Histories.Count, sc.GetLit().iIndex, h.Lit.iIndex);
             gameField.UpdateHistories(move);
             foreach(var obstacle in obstacles.Values)       
             {
@@ -287,7 +284,7 @@ namespace NutBolts.Scripts
 
             LeanTween.move(sc.animator.gameObject, h.transform.position, 0.3f).setOnComplete(() =>
             {
-                h.GetLit().GetScrew().Reactivate();
+                h.Lit.Screw.Reactivate();
                 sc.OnRelease();
                 sc.DeActivate();
             });
@@ -318,12 +315,12 @@ namespace NutBolts.Scripts
             return screw;
         }
 
-        private Hole GetNewHole(Vector3 pos, int id)
+        private ScrewHole GetNewHole(Vector3 pos, int id)
         {
             GameObject o = ItemsController.Instance.TakeItem("hole");
             o.transform.position = pos;
             o.name = "Hole_" + id;
-            Hole h= o.GetComponent<Hole>();
+            ScrewHole h= o.GetComponent<ScrewHole>();
             return h;
         }
 
@@ -386,8 +383,8 @@ namespace NutBolts.Scripts
                 if (OnWin != null)
                 {
                     OnWin();
-                    DataMono.Instance.CGameData.Level++;
-                    DataMono.Instance.SaveLocalData();
+                    DataMono.Instance.Data.Level++;
+                    DataMono.Instance.SaveAll();
                 }
            
             }
@@ -416,8 +413,8 @@ namespace NutBolts.Scripts
             int end = int.Parse(Arr[1]);
             gameField.UpdateBoard(begin, CSquare.Nut);
             gameField.UpdateBoard(end, CSquare.Hole);
-            GetLit(begin).GetScrew().Activate();
-            GetLit(end).GetScrew().DeActivate();
+            GetLit(begin).Screw.Activate();
+            GetLit(end).Screw.DeActivate();
             var listofsides = gameField.Histories[move];
             foreach(var pair in obstacles)
             {
@@ -469,9 +466,9 @@ namespace NutBolts.Scripts
             FLAG_TOOLS = true;
             foreach(var lit in lits.Values)
             {
-                if (lit.GetScrew())
+                if (lit.Screw)
                 {
-                    lit.GetScrew().TurnOnToolLight();
+                    lit.Screw.TurnOnToolLight();
                 }
             }
         }
@@ -480,9 +477,9 @@ namespace NutBolts.Scripts
             FLAG_TOOLS = false;
             foreach (var lit in lits.Values)
             {
-                if (lit.GetScrew())
+                if (lit.Screw)
                 {
-                    lit.GetScrew().TurnOffToolLight();
+                    lit.Screw.TurnOffToolLight();
                 }
             }
         }
@@ -491,13 +488,13 @@ namespace NutBolts.Scripts
             FLAG_TIPS = true;
             INDEX_TIPS = 0;
             Lit lit = GetLit(levelObject.tipPaths[INDEX_TIPS]);
-            lit.TurnOn();
+            lit.IsActive = true;
         }
         public void OnNextTip()
         {       
             foreach(var l in lits.Values)
             {
-                l.TurnOff();
+                l.IsActive = false;
             }
             INDEX_TIPS++;
             if (INDEX_TIPS < levelObject.tipPaths.Count)
@@ -505,7 +502,7 @@ namespace NutBolts.Scripts
                 var lit = GetLit(levelObject.tipPaths[INDEX_TIPS]);
                 if (lit)
                 {
-                    lit.TurnOn();
+                    lit.IsActive = true;
                 }
             }
         }
@@ -549,13 +546,12 @@ namespace NutBolts.Scripts
             }
             return true;
         }
-        public void ClickCoinHole(Hole h)
+        public void ClickCoinHole(ScrewHole h)
         {
-            if (DataMono.Instance.CGameData.Coins >= 100)
+            if (DataMono.Instance.Data.Coins >= 100)
             {
-                DataMono.Instance.CGameData.Coins -= 100;
-                DataMono.Instance.SaveLocalData();
-                h.isCoin = false;
+                DataMono.Instance.Data.Coins -= 100;
+                DataMono.Instance.SaveAll();
                 VKNotifyController.Instance.AddNotify("-100 coin.", VKNotifyController.TypeNotify.Normal);
            
             }

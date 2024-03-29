@@ -13,7 +13,7 @@ namespace NutBolts.Scripts.Editor
     public class CLevelMakerEditor : EditorWindow
     {
         private int levelNumber = 1;
-        private string[] toolbarStrings = new string[] { "Editor", "Helps", };
+        private string[] toolbarStrings =  { "Editor", "Helps", };
         private static int selected;
 
         Vector2 scrollViewVector;

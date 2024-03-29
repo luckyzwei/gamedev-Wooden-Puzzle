@@ -13,7 +13,7 @@ namespace NutBolts.Scripts.UI.UIGame
         private AbilityObj boosterObj;
         public void Initialized()
         {
-            boosterObj = DataMono.Instance.GetBoosterObj(boosterType);
+            boosterObj = DataMono.Instance.GetAbilityObj(boosterType);
             RefreshBooster();
         }
         public void OnCick()
@@ -21,7 +21,7 @@ namespace NutBolts.Scripts.UI.UIGame
             VKAudioController.Instance.PlaySound("Button");
             if (boosterObj == null)
             {
-                boosterObj = DataMono.Instance.GetBoosterObj(boosterType);
+                boosterObj = DataMono.Instance.GetAbilityObj(boosterType);
             }
             if (boosterObj.count == 0)
             {
@@ -38,7 +38,7 @@ namespace NutBolts.Scripts.UI.UIGame
         }
         private void OnClickNormal()
         {
-            DataMono.Instance.SubBooster(boosterType);
+            DataMono.Instance.SubAbility(boosterType);
             OnComplete();
             RefreshBooster();       
         }
