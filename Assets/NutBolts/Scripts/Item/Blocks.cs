@@ -13,6 +13,7 @@ namespace NutBolts.Scripts.Item
     {
         [Inject] private ItemsController _itemsController;
         [Inject] private VKAudioController _vkAudioController;
+        [Inject] private GameManager _gameManager;
         [FormerlySerializedAs("offset")] [SerializeField] private  Vector2 _offSet;
         [FormerlySerializedAs("attractRigid")] [SerializeField] private Rigidbody2D _rigidbody;
         [FormerlySerializedAs("ScaleX")] public bool _xScale;
@@ -179,11 +180,11 @@ namespace NutBolts.Scripts.Item
             {
                 _isActive = true;
                 gameObject.SetActive(true);
-                Side side = GameManager.instance.GetSideById(ObstacleSide.id);
+                Side side = _gameManager.GetSideById(ObstacleSide.id);
                 if (side.prefabName != string.Empty)
                 {
                     side.dots = new List<int>(ObstacleSide.dots);
-                    GameManager.instance.Field.GenerateSide(side, side.id);
+                    _gameManager.Field.GenerateSide(side, side.id);
                 }
             }
 
@@ -203,7 +204,7 @@ namespace NutBolts.Scripts.Item
             foreach(int d in ObstacleSide.dots)
             {
                 var hingleJoint = gameObject.AddComponent<HingeJoint2D>();
-                var sc = GameManager.instance.FindLit(d).Screw;
+                var sc = _gameManager.FindLit(d).Screw;
                 var p= transform.InverseTransformPoint(sc.transform.position);
                 hingleJoint.connectedBody = sc.rigidboy2D;
                 hingleJoint.connectedAnchor= p;

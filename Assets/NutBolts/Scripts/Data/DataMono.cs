@@ -4,8 +4,6 @@ namespace NutBolts.Scripts.Data
 {
     public class DataMono : MonoBehaviour
     {
-        private static DataMono instance;
-        //public static DataMono Instance;
         public  GameData Data { get; private set; }
         public  SettingInfo SettingData { get; private set; }
         private void Awake()

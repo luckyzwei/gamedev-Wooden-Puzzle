@@ -11,6 +11,7 @@ namespace NutBolts.Scripts.Installers
         [SerializeField] private VKLayerController _vkLayerController;
         [SerializeField] private VKNotifyController _vkNotifyController;
         [SerializeField] private VKAudioController _vkAudioController;
+        
         public override void InstallBindings()
         {
             Container.Bind<VKLayerController>().FromInstance(_vkLayerController).AsSingle();

@@ -12,6 +12,7 @@ namespace NutBolts.Scripts.Assistant
     {
         [Inject] private DataMono _dataMono;
         [Inject] private VKAudioController _vkAudioController;
+        [Inject] private GameManager _gameManager;
         private float _errorTime = 0.025f;
         private Screw _selectScrew;
         public ScrewState _screwState { get; private set; } = ScrewState.Normal;
@@ -27,6 +28,7 @@ namespace NutBolts.Scripts.Assistant
 
         private void Update()
         {
+            if (Input.mousePosition.x == Mathf.Infinity) return;
             var point = Camera.main.ScreenToWorldPoint(Input.mousePosition);
        
             RaycastHit2D mainhit = Physics2D.Raycast(point, Vector2.zero, 10, 1 << 9 );
@@ -163,14 +165,14 @@ namespace NutBolts.Scripts.Assistant
                 {
                     l.Screw.ReleaseScre();
                     l.Screw.MakeNotActive();
-                    GameManager.instance.DisableTool();
+                    _gameManager.DisableTool();
                     _selectScrew = null;
                 }
             }
             if (GameManager.flagTips)
             {
 
-                GameManager.instance.OnNextTip();
+                _gameManager.OnNextTip();
             }
         }
 

@@ -11,6 +11,7 @@ namespace NutBolts.Scripts.UI.UIGame
     {
         [Inject] private VKAudioController _vkAudioController;
         [Inject] private DataMono _dataMono;
+        [Inject] private GameManager _gameManager;
         [FormerlySerializedAs("videoObj")] [SerializeField] private GameObject _forVideo;
         [FormerlySerializedAs("normalObj")] [SerializeField] private GameObject _normal;
         [FormerlySerializedAs("boosterType")] [SerializeField] private AbilityType _type;
@@ -55,19 +56,19 @@ namespace NutBolts.Scripts.UI.UIGame
         }
         private void OnReset()
         {
-            GameManager.instance.ResetAllBusters();
+            _gameManager.ResetAllBusters();
         }
         private void OnTips()
         {
-            GameManager.instance.PlayTip();
+            _gameManager.PlayTip();
         }
         private void OnTool()
         {
-            GameManager.instance.OnTool();
+            _gameManager.OnTool();
         }
         private void OnPrevious()
         {
-            GameManager.instance.OnMove();
+            _gameManager.OnMove();
         }
 
         private void ResetBooster()

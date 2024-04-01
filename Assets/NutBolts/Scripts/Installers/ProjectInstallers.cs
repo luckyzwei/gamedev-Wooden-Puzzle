@@ -10,11 +10,13 @@ namespace NutBolts.Scripts.Installers
         [SerializeField] private ItemController _itemController;
         [SerializeField] private ItemsController _itemsController;
         [SerializeField] private DataMono _dataMono;
+        [SerializeField] private GameManager _gameManager;
         public override void InstallBindings()
         {
             Container.Bind<ItemController>().FromInstance(_itemController).AsSingle();
             Container.Bind<ItemsController>().FromInstance(_itemsController).AsSingle();
             Container.Bind<DataMono>().FromInstance(_dataMono).AsSingle();
+            Container.Bind<GameManager>().FromInstance(_gameManager).AsSingle();
         }
     }
 }

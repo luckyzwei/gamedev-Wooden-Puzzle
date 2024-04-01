@@ -8,12 +8,13 @@ namespace NutBolts.Scripts.UI.UIFail
     {
         [Inject] private VKAudioController _vkAudioController;
         [Inject] private VKLayerController _vkLayerController;
+        [Inject] private GameManager _gameManager;
         public void Home()
         {
             _vkAudioController.PlaySound("Button");
             var uiGame = (UIGame.UIGameMenu)_vkLayerController.GetLayer("UIGame");
             uiGame.Close();
-            GameManager.instance.Reset();
+            _gameManager.Reset();
             _vkLayerController.ShowLayer("UIMenu");
             Close();
         }
@@ -28,7 +29,7 @@ namespace NutBolts.Scripts.UI.UIFail
         public void Retry()
         {
             _vkAudioController.PlaySound("Button");
-            GameManager.instance.OnReplayLevel();
+            _gameManager.OnReplayLevel();
             Close();
         }
     }

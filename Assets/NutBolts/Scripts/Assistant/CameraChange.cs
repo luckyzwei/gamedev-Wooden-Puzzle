@@ -1,10 +1,12 @@
 using System.Collections;
 using UnityEngine;
+using Zenject;
 
 namespace NutBolts.Scripts.Assistant
 {
     public class CameraChange : MonoBehaviour
     {  
+        [Inject] private GameManager _gameManager;
         private Rect _rectField;
         private float _height;
         private float _width;
@@ -29,8 +31,8 @@ namespace NutBolts.Scripts.Assistant
 
         private IEnumerator DelayRoutine()
         {
-            yield return new WaitWhile(() => !GameManager.@this);
-            if (GameManager.@this.Status == GameState.PrepareGame)
+            yield return new WaitWhile(() => !_gameManager);
+            if (_gameManager.Status == GameState.PrepareGame)
             {
                 _height = _maxY - _minY ;
                 _width = _maxX - _minX;

@@ -12,6 +12,7 @@ namespace NutBolts.Scripts.UI.UIWin
         [Inject] private VKAudioController _vkAudioController;
         [Inject] private VKLayerController _vkLayerController;
         [Inject] private DataMono _dataMono;
+        [Inject] private GameManager _gameManager;
         [SerializeField] private Text _levelText;
         private LevelObject _levelObj;
         [SerializeField] private VKInfiniteScroll _scroll;
@@ -25,21 +26,19 @@ namespace NutBolts.Scripts.UI.UIWin
         public void OpenNextLevel()
         {
             _vkAudioController.PlaySound("Button");
-            GameManager.instance.LoadNextLevel();
+            _gameManager.LoadNextLevel();
             Close();
         }
-        public void HomeButton() //TODO fix
+        public void HomeButton() 
         {
             _vkAudioController.PlaySound("Button");
-            //var uiGame = (UIGame.UIGameMenu)_vkLayerController.GetLayer("UIGame");
-            //uiGame.Close();
-            GameManager.instance.Reset();
+            _gameManager.Reset();
             _vkLayerController.ShowLayer("UIMenu");
             Close();
         }
         public void Construct()
         {
-            _levelObj = GameManager.instance.LevelObject;
+            _levelObj = _gameManager.LevelObject;
         
             _levelText.text = string.Format("Level {0}", GameManager.level);
             _scroll.RecycleAll();

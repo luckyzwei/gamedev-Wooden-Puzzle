@@ -148,7 +148,7 @@ namespace NutBolts.Scripts.Editor
             if (EditorSceneManager.GetActiveScene().name == "game")
             {
 
-                var clm = Camera.main.GetComponent<ItemsController>();
+                var clm = FindObjectOfType<ItemsController>();
                 blockTextures = new Texture[clm._mainItem.Count];
                 blockContents = new GUIContent[clm._mainItem.Count];
                 for (int i = 0; i < blockTextures.Length; i++)

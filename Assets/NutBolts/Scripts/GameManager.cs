@@ -30,8 +30,6 @@ namespace NutBolts.Scripts
         public static int indexTips;
         public static int collect;
         public static int level = 1;
-        public static GameManager @this;
-        public static GameManager instance;
         [SerializeField] private SpriteRenderer _bgSprite;
         [SerializeField] private SpriteRenderer _ground;
         [SerializeField] private CLevels _targetLevel;
@@ -50,25 +48,21 @@ namespace NutBolts.Scripts
             set
             {
                 _gameStatus = value;
-                if (value == GameState.Init)
+                switch (value)
                 {
-                    if (PlayerPrefs.GetInt("OpenLevelTest") <= 0)
-                    {
+                    case GameState.Init when PlayerPrefs.GetInt("OpenLevelTest") <= 0:
                         Debug.LogWarning("OpenLevelTest failed");
                         _vkLayerController.ShowLayer("UIMenu");
-                    }
-                    else
-                    {
-                        @this.Status = GameState.PrepareGame;
+                        break;
+                    case GameState.Init:
+                        Status = GameState.PrepareGame;
                         PlayerPrefs.SetInt("OpenLevelTest", 0);
                         PlayerPrefs.Save();
-                    }
+                        break;
+                    case GameState.PrepareGame:
+                        PrepairGame();
+                        break;
                 }
-                else if (value == GameState.PrepareGame)
-                {
-                    PrepairGame();
-                }
-           
             }
         }
         private GameState _gameStatus;
@@ -83,8 +77,6 @@ namespace NutBolts.Scripts
 
         private void Start()
         {
-            instance = this;
-            @this = this;
             Status = GameState.Init;
         }
 
@@ -103,7 +95,9 @@ namespace NutBolts.Scripts
 
         private void PrepairGame()
         {
+            Debug.Log(LevelObject);
             Initial(LevelObject);
+            
         }
 
         private void LoadDataFromLocal(int currentLevel)

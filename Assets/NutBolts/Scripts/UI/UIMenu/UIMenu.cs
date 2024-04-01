@@ -12,6 +12,7 @@ namespace NutBolts.Scripts.UI.UIMenu
         [Inject] private VKAudioController _vkAudioController;
         [Inject] private VKLayerController _vkLayerController;
         [Inject] private DataMono _dataMono;
+        [Inject] private GameManager _gameManager;
         [SerializeField] private List<LevelButton> _levelButtons;
         private void Start()
         {
@@ -47,8 +48,8 @@ namespace NutBolts.Scripts.UI.UIMenu
             _vkAudioController.PlaySound("Button");
             _vkLayerController.ShowLoading();
             PlayerPrefs.SetInt("OpenLevel", levelIndex);
-            GameManager.instance.ConstructLevel();
-            GameManager.@this.Status = GameState.PrepareGame;
+            _gameManager.ConstructLevel();
+            _gameManager.Status = GameState.PrepareGame;
             Close();
         }
         public void OpenSettings()

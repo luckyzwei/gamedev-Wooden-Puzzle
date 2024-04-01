@@ -37,36 +37,14 @@ namespace VKSdk
         #endregion
 
         #region Singleton
-        private static VKAudioController instance;
+       
 
-        public static VKAudioController Instance
+        private void Start()
         {
-            get
-            {
-                if (instance == null)
-                {
-                    instance = GameObject.FindObjectOfType<VKAudioController>();
-                }
-                return instance;
-            }
-        }
-
-        void Awake()
-        {
-            if (instance != null && instance != this)
-            {
-                Destroy(this.gameObject);
-                return;
-            }
-            else
-            {
-                instance = this;
-            }
-
             audioCaches = new List<AudioClip>();
-            VKAudioController.Instance.isMusicOn = _dataMono.SettingData.isMusic;
-            VKAudioController.Instance.isSoundOn = _dataMono.SettingData.isSound;
-            DontDestroyOnLoad(this.gameObject);
+            isMusicOn = _dataMono.SettingData.isMusic;
+            isSoundOn = _dataMono.SettingData.isSound;
+            //DontDestroyOnLoad(this.gameObject);
         }
 
         #endregion

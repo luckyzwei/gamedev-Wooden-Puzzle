@@ -11,6 +11,7 @@ namespace NutBolts.Scripts.UI.UIPause
         [Inject] private VKAudioController _vkAudioController;
         [Inject] private VKLayerController _vkLayerController;
         [Inject] private DataMono _dataMono;
+        [Inject] private GameManager _gameManager;
         [SerializeField] private Transform _soundToggle;
         [SerializeField] private Transform _musicToggle;
         [SerializeField] private Transform _shakeToggle;
@@ -60,7 +61,7 @@ namespace NutBolts.Scripts.UI.UIPause
             _vkAudioController.PlaySound("Button");
             var uiGame = (UIGame.UIGameMenu)_vkLayerController.GetLayer("UIGame");
             uiGame.Close();
-            GameManager.instance.Reset();
+            _gameManager.Reset();
             _vkLayerController.ShowLayer("UIMenu");
             Close();
         }
