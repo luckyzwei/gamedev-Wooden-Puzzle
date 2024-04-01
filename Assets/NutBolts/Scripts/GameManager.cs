@@ -55,9 +55,9 @@ namespace NutBolts.Scripts
                         _vkLayerController.ShowLayer("UIMenu");
                         break;
                     case GameState.Init:
-                        Status = GameState.PrepareGame;
                         PlayerPrefs.SetInt("OpenLevelTest", 0);
-                        PlayerPrefs.Save();
+                        ConstructLevel();
+                        Status = GameState.PrepareGame;
                         break;
                     case GameState.PrepareGame:
                         PrepairGame();
@@ -95,9 +95,7 @@ namespace NutBolts.Scripts
 
         private void PrepairGame()
         {
-            Debug.Log(LevelObject);
             Initial(LevelObject);
-            
         }
 
         private void LoadDataFromLocal(int currentLevel)

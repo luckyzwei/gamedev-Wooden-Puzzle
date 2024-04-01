@@ -25,6 +25,7 @@ namespace NutBolts.Scripts.Assistant
 
 		public T TakeItem<T>(string key) where T : Component
 		{
+			Debug.Log(key);
 			return _diContainer.InstantiatePrefab(_itemMap[key]).GetComponent<T>();
 		}
 

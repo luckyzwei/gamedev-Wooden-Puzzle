@@ -19,8 +19,8 @@ namespace NutBolts.Scripts.UI.UIMenu
             for (var i = 0; i < _levelButtons.Count; i++)
             {
                 if(_levelButtons[i] == null) return;
-                int levelIndex = i;
-                _levelButtons[i].Assign(i+1);
+                int levelIndex = i + 1;
+                _levelButtons[i].Assign(levelIndex);
                 _levelButtons[i].Button.onClick.AddListener((() =>
                 {
                     LoadLevel(levelIndex);
