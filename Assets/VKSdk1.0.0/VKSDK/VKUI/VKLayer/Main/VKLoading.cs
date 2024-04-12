@@ -6,7 +6,6 @@ namespace VKSdk.UI
 {
     public class VKLoading : MonoBehaviour
     {
-        [SerializeField] GameObject objConnect;
         [SerializeField] float speedRotate;
         Coroutine action;
         public void ShowLoading(bool autoHide)
@@ -31,7 +30,6 @@ namespace VKSdk.UI
 
         {
             action = null;
-            objConnect.transform.Rotate(0, 0, -speedRotate);
             yield return new WaitForSeconds(0.02f);
             action = StartCoroutine(RotateConnecting());
         }

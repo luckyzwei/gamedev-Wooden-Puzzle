@@ -11,10 +11,10 @@ namespace NutBolts.Scripts.Data
         public int Level { get; set; }
         public List<AbilityObj> Abilities {get;} = new() 
         {
-            new() {count=1000,Type=AbilityType.CReset},
-            new() {count=1000,Type=AbilityType.CTool},
-            new() {count=1000,Type=AbilityType.CTip},
-            new() {count=1000,Type=AbilityType.CPrevious}
+            new() {count=100,Type=AbilityType.CReset},
+            new() {count=100,Type=AbilityType.CTool},
+            new() {count=100,Type=AbilityType.CTip},
+            new() {count=100,Type=AbilityType.CPrevious}
         };
 
         public void UseAbility(AbilityType type)

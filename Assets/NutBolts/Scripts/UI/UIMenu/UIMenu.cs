@@ -14,6 +14,8 @@ namespace NutBolts.Scripts.UI.UIMenu
         [Inject] private DataMono _dataMono;
         [Inject] private GameManager _gameManager;
         [SerializeField] private List<LevelButton> _levelButtons;
+        [SerializeField] private GameObject _startMenu;
+        [SerializeField] private GameObject _levelsMenu;
         private void Start()
         {
             for (var i = 0; i < _levelButtons.Count; i++)
@@ -56,6 +58,12 @@ namespace NutBolts.Scripts.UI.UIMenu
         {
             _vkAudioController.PlaySound("Button");
             _vkLayerController.ShowLayer("UISetting");
+        }
+
+        public void OpenLevels(bool isLevels)
+        {
+            _startMenu.SetActive(!isLevels);
+            _levelsMenu.SetActive(isLevels);
         }
 
     }

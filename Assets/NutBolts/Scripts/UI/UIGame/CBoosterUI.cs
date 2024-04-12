@@ -1,4 +1,5 @@
 using NutBolts.Scripts.Data;
+using TMPro;
 using UnityEngine;
 using UnityEngine.Serialization;
 using UnityEngine.UI;
@@ -12,37 +13,29 @@ namespace NutBolts.Scripts.UI.UIGame
         [Inject] private VKAudioController _vkAudioController;
         [Inject] private DataMono _dataMono;
         [Inject] private GameManager _gameManager;
-        [FormerlySerializedAs("videoObj")] [SerializeField] private GameObject _forVideo;
-        [FormerlySerializedAs("normalObj")] [SerializeField] private GameObject _normal;
+        [SerializeField] private TMP_Text _countText;
         [FormerlySerializedAs("boosterType")] [SerializeField] private AbilityType _type;
         private AbilityObj _booster;
         public void Construct()
         {
             _booster = _dataMono.GetAbilityObj(_type);
-            ResetBooster();
+            _countText.text = _booster.count.ToString();
         }
         public void UseAbility()
         {
             _vkAudioController.PlaySound("Button");
-            _booster ??= _dataMono.GetAbilityObj(_type);
-            if (_booster.count == 0)
-            {
-                Video();
-            }
-            else
+            if (_booster.count != 0)
             {
                 SimpleUse();
             }
-        }
-        private void Video()
-        {
-            OnComplete();
+           
         }
         private void SimpleUse()
         {
             _dataMono.SubAbility(_type);
+            _countText.text = _booster.count.ToString();
             OnComplete();
-            ResetBooster();       
+              
         }
         private void OnComplete()
         {
@@ -69,21 +62,6 @@ namespace NutBolts.Scripts.UI.UIGame
         private void OnPrevious()
         {
             _gameManager.OnMove();
-        }
-
-        private void ResetBooster()
-        {
-            if (_booster.count == 0)
-            {
-                _forVideo.SetActive(true);
-                _normal.SetActive(false);
-            }
-            else
-            {
-                _forVideo.SetActive(false);
-                _normal.SetActive(true);
-                _normal.transform.GetChild(0).GetComponent<Text>().text = _booster.count.ToString();
-            }
         }
     }
 }

@@ -30,7 +30,6 @@ namespace NutBolts.Scripts
         public static int indexTips;
         public static int collect;
         public static int level = 1;
-        [SerializeField] private SpriteRenderer _bgSprite;
         [SerializeField] private SpriteRenderer _ground;
         [SerializeField] private CLevels _targetLevel;
         public LevelObject LevelObject { get; private set; }
@@ -82,7 +81,7 @@ namespace NutBolts.Scripts
 
         public void ConstructLevel()
         {
-            _bgSprite.gameObject.SetActive(true);
+            _ground.gameObject.SetActive(true);
             level = PlayerPrefs.GetInt("OpenLevel");
             if (level == 0)
             {
@@ -117,7 +116,6 @@ namespace NutBolts.Scripts
         {
             Field = new GameBoard(levelObject);
             this.LevelObject = levelObject;
-            GenerateBg();
             GenerateLit();
             Invoke("GenerateItem", 0.1f);
             Invoke("LoadLevelCompleted", 0.5f);
@@ -130,14 +128,7 @@ namespace NutBolts.Scripts
             uiGame.Construct(second);
             OnEnterGame?.Invoke();
         }
-
-        private void GenerateBg()
-        {
-            _ground.gameObject.SetActive(true);
-      
-            _bgSprite.transform.position = Vector3.zero;
-            _ground.transform.position = Vector3.zero;
-        }
+        
 
         private void GenerateLit()
         {
@@ -344,9 +335,7 @@ namespace NutBolts.Scripts
             _ground.gameObject.SetActive(false);
             RemovePeoplePopulation();
         }
-
-        private int _dem = 0;
-
+        
         private void GoHome()
         {
             var uiMenu = _vkLayerController.GetLayer("UIMenu");

@@ -8,6 +8,7 @@ namespace NutBolts.Scripts.UI.UIMenu
     {
         [SerializeField] private Button _button;
         [SerializeField] private TMP_Text _levelText;
+        [SerializeField] private GameObject _lockImage;
         private int _sceneIndex;
 
         public Button Button => _button;
@@ -16,8 +17,10 @@ namespace NutBolts.Scripts.UI.UIMenu
         {
             _sceneIndex = sceneIndex;
             _levelText.text = _sceneIndex.ToString();
+            _levelText.gameObject.SetActive(true);
+            _lockImage.SetActive(false);
         }
-
+        
         private void OnDestroy()
         {
             _button.onClick.RemoveAllListeners();

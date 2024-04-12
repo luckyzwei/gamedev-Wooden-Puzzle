@@ -112,11 +112,7 @@ namespace NutBolts.Scripts.Editor
             if (GUI.changed && !EditorApplication.isPlaying)
                 EditorSceneManager.MarkAllScenesDirty();
         }
-        GUIStyle style;
-        private void OnEnable()
-        {
-            Debug.Log("On Enable");
-        }
+        private GUIStyle style;
         private void OnFocus()
         {
             Debug.Log("OnFocus");
@@ -165,7 +161,6 @@ namespace NutBolts.Scripts.Editor
 
         }
         
-        float rotAngle = 10f;
         Vector2 pivotPoint;
 
         private void GUILevelSelector()
@@ -714,7 +709,6 @@ namespace NutBolts.Scripts.Editor
         {
             AssetDatabase.Refresh();
             update = false;
-            rotAngle = 0;
             fileName = levelNumber.ToString();
             if (levelObject == null)
             {

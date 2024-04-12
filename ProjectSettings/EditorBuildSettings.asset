@@ -6,9 +6,9 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/NutBolts/Scenes/loading.unity
-    guid: 8fd976fbf9443ed48a538ae492513d2a
-  - enabled: 1
     path: Assets/NutBolts/Scenes/game.unity
     guid: 6b13a377427b0de4ba2db49d758a0308
+  - enabled: 1
+    path: Assets/NutBolts/Scenes/loading.unity
+    guid: 8fd976fbf9443ed48a538ae492513d2a
   m_configObjects: {}

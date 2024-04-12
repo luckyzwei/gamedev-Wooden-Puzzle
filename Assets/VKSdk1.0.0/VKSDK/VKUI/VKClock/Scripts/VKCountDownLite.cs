@@ -1,5 +1,6 @@
 using System;
 using System.Collections;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -7,7 +8,7 @@ namespace VKSdk.UI
 {
     public class VKCountDownLite : MonoBehaviour
     {
-        public Text txtCountDown;
+        public TMP_Text txtCountDown;
 
         public float countdown; // seconds
         public float countdownTest; // seconds
@@ -30,11 +31,7 @@ namespace VKSdk.UI
         private bool isShowSpecial;
 
         private DateTime timePause;
-
-        //public void OnDisable()
-        //{
-        //    StopCountDown();
-        //}
+        
 
         [ContextMenu("Test")]
         public void Test()

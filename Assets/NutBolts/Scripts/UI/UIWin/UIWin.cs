@@ -1,4 +1,5 @@
 using NutBolts.Scripts.Data;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using VKSdk;
@@ -13,7 +14,7 @@ namespace NutBolts.Scripts.UI.UIWin
         [Inject] private VKLayerController _vkLayerController;
         [Inject] private DataMono _dataMono;
         [Inject] private GameManager _gameManager;
-        [SerializeField] private Text _levelText;
+        [SerializeField] private TMP_Text _levelText;
         private LevelObject _levelObj;
         [SerializeField] private VKInfiniteScroll _scroll;
     
