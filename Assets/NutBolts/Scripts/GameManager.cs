@@ -119,7 +119,7 @@ namespace NutBolts.Scripts
             GenerateLit();
             Invoke("GenerateItem", 0.1f);
             Invoke("LoadLevelCompleted", 0.5f);
-            var uiGame =(UIGameMenu) _vkLayerController.ShowLayer("UIGame");
+            var uiGame = (UIGameMenu)_vkLayerController.ShowLayer("UIGame");
             int second=300;
             if (_targetLevel.targets.Length > 1)
             {
@@ -424,10 +424,12 @@ namespace NutBolts.Scripts
         }
         public void PlayTip()
         {
+            Reset();
+            _vkLayerController.HideAllLayer();
             RemovePeoplePopulation();
             ConstructLevel();
-            _vkLayerController.ShowLoading();
             Status = GameState.PrepareGame;
+            _vkLayerController.ShowLoading();
             Invoke("TipRevert", 0.5f);
         }
         public void ResetAllBusters()

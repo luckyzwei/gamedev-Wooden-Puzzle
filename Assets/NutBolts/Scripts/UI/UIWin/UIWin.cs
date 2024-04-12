@@ -16,14 +16,9 @@ namespace NutBolts.Scripts.UI.UIWin
         [Inject] private GameManager _gameManager;
         [SerializeField] private TMP_Text _levelText;
         private LevelObject _levelObj;
-        [SerializeField] private VKInfiniteScroll _scroll;
+        [SerializeField] private RewardUI _rewardUI;
     
-        public override void Close()
-        {
-            base.Close();
-            _scroll.OnFill -= AddReward;
-            _scroll.OnWidth -= OnWidthChange;
-        }
+        
         public void OpenNextLevel()
         {
             _vkAudioController.PlaySound("Button");
@@ -42,10 +37,8 @@ namespace NutBolts.Scripts.UI.UIWin
             _levelObj = _gameManager.LevelObject;
         
             _levelText.text = string.Format("Level {0}", GameManager.level);
-            _scroll.RecycleAll();
-            _scroll.OnWidth += OnWidthChange;
-            _scroll.OnFill += AddReward;
-            _scroll.InitData(_levelObj.rewards.Count);
+            _rewardUI.InitData(_levelObj.rewards[0]);
+          
             for(int i=0; i<_levelObj.rewards.Count; i++)
             {
                 AbilityObj b = _levelObj.rewards[i].ConvertRewardToBooster();
@@ -60,16 +53,6 @@ namespace NutBolts.Scripts.UI.UIWin
             }
             _dataMono.SaveAll();
             _vkAudioController.PlaySound("Cheers");
-        }
-
-        private void AddReward(int index, GameObject go)
-        {
-            go.GetComponent<RewardUI>().InitData(_levelObj.rewards[index]);
-        }
-
-        private static int OnWidthChange(int index)
-        {
-            return 400;
         }
     }
 }

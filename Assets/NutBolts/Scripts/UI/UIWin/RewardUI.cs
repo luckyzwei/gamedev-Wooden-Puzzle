@@ -1,17 +1,15 @@
 using NutBolts.Scripts.Data;
+using TMPro;
 using UnityEngine;
-using UnityEngine.UI;
 
 namespace NutBolts.Scripts.UI.UIWin
 {
     public class RewardUI : MonoBehaviour
     {
-        public Image imgIcon;
-        public Text textNumber;
+        [SerializeField] private TMP_Text _text;
         public void InitData(RewardObj reward)
         {
-            imgIcon.sprite = Resources.Load<Sprite>("Sprite/" + reward.rewardType.ToString());
-            textNumber.text = reward.amount.ToString();
+            _text.text = reward.amount.ToString();
         }
     }
 }

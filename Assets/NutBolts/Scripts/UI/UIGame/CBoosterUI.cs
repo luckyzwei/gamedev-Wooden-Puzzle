@@ -13,6 +13,7 @@ namespace NutBolts.Scripts.UI.UIGame
         [Inject] private VKAudioController _vkAudioController;
         [Inject] private DataMono _dataMono;
         [Inject] private GameManager _gameManager;
+        [SerializeField] private int _price = 100;
         [SerializeField] private TMP_Text _countText;
         [FormerlySerializedAs("boosterType")] [SerializeField] private AbilityType _type;
         private AbilityObj _booster;
@@ -47,6 +48,18 @@ namespace NutBolts.Scripts.UI.UIGame
                 case AbilityType.CPrevious: OnPrevious(); break;
             }
         }
+
+        public void Buy()
+        {
+            if (_dataMono.Data.Coins >= _price)
+            {
+                _dataMono.Data.Coins -= _price;
+                _dataMono.Data.AddAbility(_booster);
+                _booster = _dataMono.GetAbilityObj(_type);
+                _countText.text = _booster.count.ToString();
+            }
+        }
+        
         private void OnReset()
         {
             _gameManager.ResetAllBusters();

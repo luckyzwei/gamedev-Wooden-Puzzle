@@ -1,38 +1,62 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using UnityEngine;
 using UnityEngine.Serialization;
 
 namespace NutBolts.Scripts.Data
 {
     public class GameData
     {
-        public int Coins { get; set; } = 200;
+        private int _coins;
+
+        public int Coins
+        {
+            get => _coins;
+            set
+            {
+                _coins = value;
+                PlayerPrefs.SetInt("Coins", _coins);
+            }
+        }
+
         public int Level { get; set; }
         public List<AbilityObj> Abilities {get;} = new() 
         {
-            new() {count=100,Type=AbilityType.CReset},
-            new() {count=100,Type=AbilityType.CTool},
-            new() {count=100,Type=AbilityType.CTip},
-            new() {count=100,Type=AbilityType.CPrevious}
+            new() {count=0,Type=AbilityType.CReset},
+            new() {count=0,Type=AbilityType.CTool},
+            new() {count=0,Type=AbilityType.CTip},
+            new() {count=0,Type=AbilityType.CPrevious}
         };
+
+        public GameData()
+        {
+            Coins = PlayerPrefs.GetInt("Coins", 20000);
+
+            foreach (var ability in Abilities)
+            {
+                ability.count = PlayerPrefs.GetInt("Ability" + ability.Type, 100); //TODO set to 0
+            }
+        }
 
         public void UseAbility(AbilityType type)
         {
-            foreach (var t in Abilities.Where(t => t.Type == type))
+            foreach (var ability in Abilities.Where(t => t.Type == type))
             {
-                t.count--;
-                if (t.count < 0) t.count = 0;
+                ability.count--;
+                if (ability.count < 0) ability.count = 0;
+                PlayerPrefs.SetInt("Ability" + ability.Type, ability.count);
                 break;
             }
         }
         public void AddAbility(AbilityObj booster)
         {
-            foreach (var t in Abilities)
+            foreach (var ability in Abilities)
             {
-                if (t.Type == booster.Type)
+                if (ability.Type == booster.Type)
                 {
-                    t.count+=booster.count;               
+                    ability.count += 1;       
+                    PlayerPrefs.SetInt("Ability" + ability.Type, ability.count);
                     break;
                 }
             }
