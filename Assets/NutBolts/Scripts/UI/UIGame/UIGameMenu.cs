@@ -14,6 +14,7 @@ namespace NutBolts.Scripts.UI.UIGame
         [SerializeField] private VKCountDownLite _countDown;
         [SerializeField] private CBoosterUI[] _abilities;
         [SerializeField] private TextMeshProUGUI _levelText;
+        [SerializeField] private GameObject _buyWindow;
         private void OnEnable()
         {
             GameManager.OnWin += Wictory;
