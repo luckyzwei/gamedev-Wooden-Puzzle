@@ -271,7 +271,7 @@ namespace VKSdk.UI
             sLayer.name = nameLayer + "_" + (countLayer + 1);
 
             sLayer.SetSortOrder(sorting);
-            sLayer.canvas.planeDistance = distance;
+            //sLayer.canvas.planeDistance = distance;
             sLayer.canvas.sortingLayerName = "UI";
             // action
             if (isCreate)
