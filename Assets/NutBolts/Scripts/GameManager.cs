@@ -483,7 +483,7 @@ namespace NutBolts.Scripts
                 l.IsActive = false;
             }
             indexTips++;
-            if (indexTips < LevelObject.tipPaths.Count)
+            if (indexTips < 2) //LevelObject.tipPaths.Count - Old one that shows all tips
             {
                 var lit = FindLit(LevelObject.tipPaths[indexTips]);
                 if (lit)
