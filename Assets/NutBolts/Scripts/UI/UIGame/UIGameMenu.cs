@@ -17,7 +17,6 @@ namespace NutBolts.Scripts.UI.UIGame
         [SerializeField] private CBoosterUI[] _abilities;
         [SerializeField] private TextMeshProUGUI _levelText;
         [SerializeField] private VKCountDownLite _countdown;
-
         public VKCountDownLite Countdown => _countdown;
         private void OnEnable()
         {
@@ -32,7 +31,6 @@ namespace NutBolts.Scripts.UI.UIGame
             base.Close();
             Clear();
         }
-        
         public void Construct(int seconds=60)
         {
             foreach (var booster in _abilities)

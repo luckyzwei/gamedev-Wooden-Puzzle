@@ -33,10 +33,13 @@ namespace NutBolts.Scripts.UI.UIGame
         }
         private void UseAbility()
         {
-            _vkAudioController.PlaySound("Button");
-            _dataMono.SubAbility(_type);
-            _countText.text = _booster.count.ToString();
-            OnComplete();
+            if (_booster.count > 0)
+            {
+                _vkAudioController.PlaySound("Button");
+                _dataMono.SubAbility(_type);
+                _countText.text = _booster.count.ToString();
+                OnComplete();
+            }
         }
       
         private void OnComplete()

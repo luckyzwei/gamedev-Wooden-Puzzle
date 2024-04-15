@@ -22,6 +22,7 @@ namespace NutBolts.Scripts.UI.UIGame
         public void Open(CBoosterUI boosterUI)
         {
             _boosterUI = boosterUI;
+            _priceText.text = _boosterUI.Price.ToString();
             _description.text = _boosterUI.Description;
             gameObject.SetActive(true);
             _buyButton.onClick.AddListener(Buy);

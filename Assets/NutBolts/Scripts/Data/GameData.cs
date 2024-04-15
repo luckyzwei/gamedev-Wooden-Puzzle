@@ -31,12 +31,12 @@ namespace NutBolts.Scripts.Data
 
         public GameData()
         {
-            Coins = PlayerPrefs.GetInt("Coins", 20000);
-            LevelsCompleted = PlayerPrefs.GetInt("LevelsCompleted", 100);
+            Coins = PlayerPrefs.GetInt("Coins", 200);
+            LevelsCompleted = PlayerPrefs.GetInt("LevelsCompleted", 1);
             
             foreach (var ability in Abilities)
             {
-                ability.count = PlayerPrefs.GetInt("Ability" + ability.Type, 100); //TODO set to 0
+                ability.count = PlayerPrefs.GetInt("Ability" + ability.Type, 0); 
             }
         }
 
