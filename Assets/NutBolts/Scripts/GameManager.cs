@@ -256,6 +256,7 @@ namespace NutBolts.Scripts
             
                 _obstacles.Add(i+1, o);           
             }
+            
         }
 
         private void OnMoveToLit(Screw sc,ScrewHole h)
