@@ -127,8 +127,7 @@ namespace VKSdk.UI
                 TimeSpan timeRange = DateTime.Now - timePause;
                 if (timeRange.TotalSeconds > 600)
                 {
-                   // ThisGameManager.GotoLogin();
-                    VKNotifyController.Instance.AddNotify("50_PopupContents/SYS_ERROR_DISCONNECT", VKNotifyController.TypeNotify.Error);
+                   
                 }
             }
         }

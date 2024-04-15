@@ -380,6 +380,7 @@ MonoBehaviour:
   _description: 
   _buyUI: {fileID: 0}
   _iconImage: {fileID: 6616257131421904870}
+  _useButton: {fileID: 5381028606038530448}
   _type: 0
 --- !u!114 &5381028606038530448
 MonoBehaviour:
@@ -406,7 +407,7 @@ MonoBehaviour:
     m_HighlightedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
     m_PressedColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 1}
     m_SelectedColor: {r: 0.9607843, g: 0.9607843, b: 0.9607843, a: 1}
-    m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
+    m_DisabledColor: {r: 0.5283019, g: 0.5283019, b: 0.5283019, a: 1}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
   m_SpriteState:
@@ -424,19 +425,7 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2637824189656601792}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 8577199503757287214}
-        m_TargetAssemblyTypeName: NutBolts.Scripts.UI.UIGame.CBoosterUI, Assembly-CSharp
-        m_MethodName: UseAbility
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
 --- !u!1001 &4998414041001660889
 PrefabInstance:
   m_ObjectHideFlags: 0

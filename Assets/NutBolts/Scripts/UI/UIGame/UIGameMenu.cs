@@ -1,3 +1,4 @@
+using NutBolts.Scripts.Data;
 using TMPro;
 using UnityEngine;
 
@@ -11,6 +12,7 @@ namespace NutBolts.Scripts.UI.UIGame
     {
         [Inject] private VKAudioController _vkAudioController;
         [Inject] private VKLayerController _vkLayerController;
+        [Inject] private DataMono _dataMono;
         [SerializeField] private VKCountDownLite _countDown;
         [SerializeField] private CBoosterUI[] _abilities;
         [SerializeField] private TextMeshProUGUI _levelText;
@@ -56,6 +58,7 @@ namespace NutBolts.Scripts.UI.UIGame
         private void Wictory()
         {
             Clear();
+            _dataMono.Data.LevelCompleted(GameManager.level);
             var uiWin = (UIWin.UIWin)_vkLayerController.ShowLayer("UIWin");
             uiWin.Construct();
         }

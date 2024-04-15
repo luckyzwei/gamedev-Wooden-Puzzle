@@ -18,6 +18,7 @@ namespace NutBolts.Scripts.UI.UIGame
         [SerializeField] private string _description;
         [SerializeField] private BuyUI _buyUI;
         [SerializeField] private Image _iconImage;
+        [SerializeField] private Button _useButton;
         [FormerlySerializedAs("boosterType")] [SerializeField] private AbilityType _type;
         private AbilityObj _booster;
         public int Price => _price;
@@ -27,29 +28,26 @@ namespace NutBolts.Scripts.UI.UIGame
         {
             _booster = _dataMono.GetAbilityObj(_type);
             _countText.text = _booster.count.ToString();
+            _useButton.onClick.AddListener(UseAbility);
+            if (_booster.count <= 0)
+            {
+                _useButton.interactable = false;
+            }
         }
-        public void UseAbility()
+        private void UseAbility()
         {
             _vkAudioController.PlaySound("Button");
-            if (_booster.count != 0)
-            {
-                SimpleUse();
-            }
-           
-        }
-        private void SimpleUse()
-        {
             _dataMono.SubAbility(_type);
             _countText.text = _booster.count.ToString();
+            _useButton.interactable = false;
             OnComplete();
-              
+           
         }
+      
         private void OnComplete()
         {
             switch (_booster.Type)
             {
-                case AbilityType.CReset: OnReset(); break;
-                case AbilityType.CTip: OnTips(); break;
                 case AbilityType.CTool: OnTool(); break;
                 case AbilityType.CPrevious: OnPrevious(); break;
             }
@@ -66,14 +64,11 @@ namespace NutBolts.Scripts.UI.UIGame
             _booster = _dataMono.GetAbilityObj(_type);
             _countText.text = _booster.count.ToString();
         }
-        
-        private void OnReset()
+
+        public void AddBusterBack()
         {
-            _gameManager.ResetAllBusters();
-        }
-        private void OnTips()
-        {
-            _gameManager.PlayTip();
+            AddBuster();
+            _useButton.interactable = true;
         }
         private void OnTool()
         {
@@ -81,7 +76,10 @@ namespace NutBolts.Scripts.UI.UIGame
         }
         private void OnPrevious()
         {
-            _gameManager.OnMove();
+            if (!_gameManager.OnMove())
+            {
+                AddBusterBack();
+            }
         }
     }
 }

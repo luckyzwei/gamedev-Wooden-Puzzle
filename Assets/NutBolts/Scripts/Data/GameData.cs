@@ -21,18 +21,19 @@ namespace NutBolts.Scripts.Data
         }
 
         public int Level { get; set; }
+        
+        public int LevelsCompleted { get; private set; }
         public List<AbilityObj> Abilities {get;} = new() 
         {
-            new() {count=0,Type=AbilityType.CReset},
             new() {count=0,Type=AbilityType.CTool},
-            new() {count=0,Type=AbilityType.CTip},
             new() {count=0,Type=AbilityType.CPrevious}
         };
 
         public GameData()
         {
             Coins = PlayerPrefs.GetInt("Coins", 20000);
-
+            LevelsCompleted = PlayerPrefs.GetInt("LevelsCompleted", 100);
+            
             foreach (var ability in Abilities)
             {
                 ability.count = PlayerPrefs.GetInt("Ability" + ability.Type, 100); //TODO set to 0
@@ -61,6 +62,15 @@ namespace NutBolts.Scripts.Data
                 }
             }
         }
+
+        public void LevelCompleted(int currentLevel)
+        {
+            if (currentLevel >= LevelsCompleted)
+            {
+                LevelsCompleted = currentLevel + 1;
+                PlayerPrefs.SetInt("LevelsCompleted", LevelsCompleted);
+            }
+        }
     }
     
     public class SettingInfo {
@@ -79,10 +89,7 @@ namespace NutBolts.Scripts.Data
     
     public enum AbilityType
     {
-        CReset=0,
         CTool=1,
         CPrevious=2,
-        CTip=3,
-
     }
 }

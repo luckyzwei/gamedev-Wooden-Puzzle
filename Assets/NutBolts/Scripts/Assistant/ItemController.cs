@@ -108,7 +108,11 @@ namespace NutBolts.Scripts.Assistant
         private void OnHoleTouch(Screw screw, ScrewHole height)
         {
             _screwState = ScrewState.Normal;
-            UseBuster(height.Lit);
+            if (screw != null)
+            {
+                UseBuster(height.Lit);
+            }
+            
             SaveTip(screw, height);
             screw.onMove.Invoke(screw, height);
             Shake();
@@ -171,7 +175,6 @@ namespace NutBolts.Scripts.Assistant
             }
             if (GameManager.flagTips)
             {
-
                 _gameManager.OnNextTip();
             }
         }

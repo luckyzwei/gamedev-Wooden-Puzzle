@@ -18,7 +18,7 @@ namespace NutBolts.Scripts.UI.UIMenu
         [SerializeField] private GameObject _levelsMenu;
         private void Start()
         {
-            for (var i = 0; i < _levelButtons.Count; i++)
+            for (var i = 0; i < _dataMono.Data.LevelsCompleted; i++) 
             {
                 if(_levelButtons[i] == null) return;
                 int levelIndex = i + 1;

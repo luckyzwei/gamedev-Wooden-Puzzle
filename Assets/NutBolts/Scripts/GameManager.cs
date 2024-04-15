@@ -40,7 +40,7 @@ namespace NutBolts.Scripts
         private Dictionary<string, Fire> _lits;
         private Dictionary<int,Blocks> _obstacles;
         private float _litOffset = 0.66f;
-
+        
     
         public GameState Status { 
             get => _gameStatus;
@@ -336,12 +336,6 @@ namespace NutBolts.Scripts
             RemovePeoplePopulation();
         }
         
-        private void GoHome()
-        {
-            var uiMenu = _vkLayerController.GetLayer("UIMenu");
-            //OnClose();
-        }
-
         private void OnClose()
         {
             var uiGame = (UIGameMenu)_vkLayerController.GetLayer("UIGame");
@@ -380,14 +374,14 @@ namespace NutBolts.Scripts
             yield return new WaitUntil(() => _itemController._screwState == ScrewState.Waiting);
             Field.RemoveSide(obstacle.ObstacleSide.id);
         }
-        public void OnMove()
+        public bool OnMove()
         {
             if (Field.Moves.Count == 0)
             {
                 Field = new GameBoard(LevelObject);
                 _vkNotifyController.AddNotify("Previous is empty",
                     VKNotifyController.TypeNotify.Error);
-                return;
+                return false;
             }
             string move = Field.Moves[Field.Moves.Count - 1];
        
@@ -410,11 +404,13 @@ namespace NutBolts.Scripts
             _itemController.Control();
             Field.Moves.RemoveAt(Field.Moves.Count - 1);
             Field.Histories.Remove(move);
-        
+            return true;
         }
+        
         public void LoadNextLevel()
         {
             Reset();
+            
             level++;
             PlayerPrefs.SetInt("OpenLevel", level);
             ConstructLevel();
@@ -422,20 +418,7 @@ namespace NutBolts.Scripts
             _vkLayerController.ShowLoading();
             Invoke("NextLevelCompleted",0.3f);
         }
-        public void PlayTip()
-        {
-            Reset();
-            _vkLayerController.HideAllLayer();
-            RemovePeoplePopulation();
-            ConstructLevel();
-            Status = GameState.PrepareGame;
-            _vkLayerController.ShowLoading();
-            Invoke("TipRevert", 0.5f);
-        }
-        public void ResetAllBusters()
-        {
-            OnReplayLevel();
-        }
+   
         public void OnReplayLevel()
         {
             var uiGame = _vkLayerController.GetLayer("UIGame");
@@ -468,14 +451,7 @@ namespace NutBolts.Scripts
                 }
             }
         }
-
-        private void TipRevert()
-        {      
-            flagTips = true;
-            indexTips = 0;
-            Fire lit = FindLit(LevelObject.tipPaths[indexTips]);
-            lit.IsActive = true;
-        }
+        
         public void OnNextTip()
         {       
             foreach(var l in _lits.Values)

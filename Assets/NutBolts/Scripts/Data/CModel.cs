@@ -52,8 +52,6 @@ namespace NutBolts.Scripts.Data
             switch (rewardType)
             {
                 case RewardType.Coin: return null;
-                case RewardType.Reset: b.Type = AbilityType.CReset; break;
-                case RewardType.Tip: b.Type = AbilityType.CTip; break;
                 case RewardType.Tool: b.Type = AbilityType.CTool; break;
                 default: return null;
             }
