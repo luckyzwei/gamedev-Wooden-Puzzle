@@ -29,19 +29,14 @@ namespace NutBolts.Scripts.UI.UIGame
             _booster = _dataMono.GetAbilityObj(_type);
             _countText.text = _booster.count.ToString();
             _useButton.onClick.AddListener(UseAbility);
-            if (_booster.count <= 0)
-            {
-                _useButton.interactable = false;
-            }
+          
         }
         private void UseAbility()
         {
             _vkAudioController.PlaySound("Button");
             _dataMono.SubAbility(_type);
             _countText.text = _booster.count.ToString();
-            _useButton.interactable = false;
             OnComplete();
-           
         }
       
         private void OnComplete()
@@ -64,21 +59,21 @@ namespace NutBolts.Scripts.UI.UIGame
             _booster = _dataMono.GetAbilityObj(_type);
             _countText.text = _booster.count.ToString();
         }
-
-        public void AddBusterBack()
-        {
-            AddBuster();
-            _useButton.interactable = true;
-        }
+        
         private void OnTool()
         {
+            if (GameManager.flagTools)
+            {
+                AddBuster();
+                return;
+            }
             _gameManager.OnTool();
         }
         private void OnPrevious()
         {
             if (!_gameManager.OnMove())
             {
-                AddBusterBack();
+                AddBuster();
             }
         }
     }
