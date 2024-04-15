@@ -31,6 +31,7 @@ namespace VKSdk.UI
         private bool isShowSpecial;
 
         private DateTime timePause;
+        public bool IsPause { get; set; }
         
 
         [ContextMenu("Test")]
@@ -198,33 +199,37 @@ namespace VKSdk.UI
             isCountDone = true;
         }
 
-        IEnumerator ChangeTime()
+        private IEnumerator ChangeTime()
         {
             isCountDone = false;
             while (true)
             {
                 yield return new WaitForSeconds(1f);
-                countdown -= 1f;
-
-                if (countdown < 0)
-                    countdown = 0;
-
-                if (OnChangeNumber != null)
+                if (!IsPause)
                 {
-                    OnChangeNumber.Invoke((int)countdown);
-                }
+                    countdown -= 1f;
 
-                ShowTime();
-                if (countdown <= 0)
-                {
-                    isCountDone = true;
-                    if (OnCountDownComplete != null)
+                    if (countdown < 0)
+                        countdown = 0;
+
+                    if (OnChangeNumber != null)
                     {
-                        OnCountDownComplete.Invoke();
+                        OnChangeNumber.Invoke((int)countdown);
                     }
-                    break;
+
+                    ShowTime();
+                    if (countdown <= 0)
+                    {
+                        isCountDone = true;
+                        if (OnCountDownComplete != null)
+                        {
+                            OnCountDownComplete.Invoke();
+                        }
+                        break;
+                    }
                 }
             }
         }
+        
     }
 }

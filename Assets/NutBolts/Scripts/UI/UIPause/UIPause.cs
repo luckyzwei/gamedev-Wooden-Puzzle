@@ -16,6 +16,8 @@ namespace NutBolts.Scripts.UI.UIPause
         public void ClosePause()
         {
             _vkAudioController.PlaySound("Button");
+            var uiGame = (UIGame.UIGameMenu)_vkLayerController.GetLayer("UIGame");
+            uiGame.Countdown.IsPause = false;
             Close();
         }
         public void ReturnHome()

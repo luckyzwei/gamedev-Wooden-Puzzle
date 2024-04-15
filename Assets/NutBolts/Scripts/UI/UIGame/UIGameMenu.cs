@@ -14,7 +14,9 @@ namespace NutBolts.Scripts.UI.UIGame
         [SerializeField] private VKCountDownLite _countDown;
         [SerializeField] private CBoosterUI[] _abilities;
         [SerializeField] private TextMeshProUGUI _levelText;
-        [SerializeField] private GameObject _buyWindow;
+        [SerializeField] private VKCountDownLite _countdown;
+
+        public VKCountDownLite Countdown => _countdown;
         private void OnEnable()
         {
             GameManager.OnWin += Wictory;
@@ -39,14 +41,13 @@ namespace NutBolts.Scripts.UI.UIGame
             _countDown.StartCountDown();
             _countDown.OnCountDownComplete = GameLose;
             _levelText.text = $"LEVEL {GameManager.level}";
-        
-
         }
         #region Listenner
         public void OpenSettings()
         {
             _vkLayerController.ShowLayer("UIPause");
             _vkAudioController.PlaySound("Button");
+            _countdown.IsPause = true;
         }
 
         #endregion
