@@ -21,9 +21,17 @@ namespace NutBolts.Scripts.UI.UIWin
         
         public void OpenNextLevel()
         {
-            _vkAudioController.PlaySound("Button");
-            _gameManager.LoadNextLevel();
-            Close();
+            if (DataMono.LevelsTotal >= GameManager.level + 1)
+            {
+                _vkAudioController.PlaySound("Button");
+                _gameManager.LoadNextLevel();
+                Close();
+            }
+            else
+            {
+                HomeButton();
+            }
+            
         }
         public void HomeButton() 
         {

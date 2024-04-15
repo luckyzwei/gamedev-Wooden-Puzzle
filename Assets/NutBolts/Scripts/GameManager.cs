@@ -339,7 +339,7 @@ namespace NutBolts.Scripts
         private void GoHome()
         {
             var uiMenu = _vkLayerController.GetLayer("UIMenu");
-            OnClose();
+            //OnClose();
         }
 
         private void OnClose()

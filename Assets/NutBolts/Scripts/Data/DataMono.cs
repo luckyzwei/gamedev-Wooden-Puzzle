@@ -4,6 +4,7 @@ namespace NutBolts.Scripts.Data
 {
     public class DataMono : MonoBehaviour
     {
+        public const int LevelsTotal = 45;
         public  GameData Data { get; private set; }
         public  SettingInfo SettingData { get; private set; }
         private void Awake()
