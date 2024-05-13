@@ -7,7 +7,7 @@ namespace Game.Scripts.Shop
     {
         public event Action OnValuesChange; 
         private const string KEY_COINS = "Coins", KEY_GEMS = "Gems";
-        private const int START_COINS = 10000, START_GEMS = 1000;
+        private const int START_COINS = 0, START_GEMS = 0;
         private int _coins;
         private int _gems;
         public int Coins => _coins;
