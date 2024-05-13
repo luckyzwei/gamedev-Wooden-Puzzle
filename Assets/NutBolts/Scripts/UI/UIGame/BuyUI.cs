@@ -1,5 +1,6 @@
 using System;
 using DG.Tweening;
+using Game.Scripts.Shop;
 using NutBolts.Scripts.Data;
 using TMPro;
 using UnityEngine;
@@ -10,6 +11,7 @@ namespace NutBolts.Scripts.UI.UIGame
 {
     public class BuyUI : MonoBehaviour
     {
+        [Inject] private Bank _bank;
         [Inject] private DataMono _dataMono;
         [SerializeField] private TMP_Text _priceText;
         [SerializeField] private Button _buyButton;
@@ -39,9 +41,9 @@ namespace NutBolts.Scripts.UI.UIGame
 
         private void Buy()
         {
-            if (_dataMono.Data.Coins >= _boosterUI.Price)
+            if (_bank.Coins >= _boosterUI.Price)
             {
-                _dataMono.Data.Coins -= _boosterUI.Price;
+                _bank.ChangeCoins(-_boosterUI.Price); 
                 _boosterUI.AddBuster();
             }
             else

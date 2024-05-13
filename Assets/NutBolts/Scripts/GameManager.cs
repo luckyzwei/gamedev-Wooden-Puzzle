@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using System.IO;
+using Integration;
 using NutBolts.Scripts.Assistant;
 using NutBolts.Scripts.Data;
 using NutBolts.Scripts.Item;
@@ -16,6 +17,9 @@ namespace NutBolts.Scripts
 {
     public class GameManager : MonoBehaviour
     {
+        private static int _loadCount;
+        [Inject] private IAPService _iapService;
+        [Inject] private AdMobController _adMobController;
         [Inject] private VKAudioController _vkAudioController;
         [Inject] private VKNotifyController _vkNotifyController;
         [Inject] private VKLayerController _vkLayerController;
@@ -81,6 +85,17 @@ namespace NutBolts.Scripts
 
         public void ConstructLevel()
         {
+            _loadCount++;
+            if ((_loadCount + 1) % 3 == 0)
+            {
+                _adMobController.ShowInterstitialAd();
+            }
+
+            if ((_loadCount) % 3 == 0)
+            {
+                _iapService.ShowSubscriptionPanel();
+            }
+
             _ground.gameObject.SetActive(true);
             level = PlayerPrefs.GetInt("OpenLevel");
             if (level == 0)
@@ -117,8 +132,8 @@ namespace NutBolts.Scripts
             Field = new GameBoard(levelObject);
             this.LevelObject = levelObject;
             GenerateLit();
-            Invoke("GenerateItem", 0.1f);
-            Invoke("LoadLevelCompleted", 0.5f);
+            Invoke(nameof(GenerateItem), 0.1f);
+            Invoke(nameof(LoadLevelCompleted), 0.5f);
             var uiGame = (UIGameMenu)_vkLayerController.ShowLayer("UIGame");
             int second=300;
             if (_targetLevel.targets.Length > 1)
@@ -134,6 +149,7 @@ namespace NutBolts.Scripts
         {
             _litPrefab = new GameObject();
             _litPrefab.name = "Lits";
+           
             GameObject o;
             Fire s;
             Vector3 position;      
@@ -146,7 +162,7 @@ namespace NutBolts.Scripts
                     position = new Vector3();
                     position.x = -_litOffset * (0.5f * (Field.Width - 1) - x);
                     position.y = -_litOffset * (-0.5f * (Field.Height - 1) + y);
-                    o = _itemsController.TakeItem("LitEmpty", position);
+                    o = _itemsController.TakeItem("LitEmpty",  position);
                     o.name = "Lit_" + y + "x" + x;
                     o.transform.parent = _litPrefab.transform;
                     s = o.GetComponent<Fire>();
@@ -178,6 +194,7 @@ namespace NutBolts.Scripts
                     _lits.Add(y + "x" + x, s);
                 }
             }
+            _litPrefab.transform.localScale = 0.9f * Vector3.one;
         }
 
         private void GenerateItem()
@@ -256,7 +273,7 @@ namespace NutBolts.Scripts
             
                 _obstacles.Add(i+1, o);           
             }
-            
+            // _itemPrefab.transform.localScale = 0.9f * Vector3.one;
         }
 
         private void OnMoveToLit(Screw sc,ScrewHole h)

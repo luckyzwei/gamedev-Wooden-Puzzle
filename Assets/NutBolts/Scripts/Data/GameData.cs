@@ -8,18 +8,6 @@ namespace NutBolts.Scripts.Data
 {
     public class GameData
     {
-        private int _coins;
-
-        public int Coins
-        {
-            get => _coins;
-            set
-            {
-                _coins = value;
-                PlayerPrefs.SetInt("Coins", _coins);
-            }
-        }
-
         public int Level { get; set; }
         
         public int LevelsCompleted { get; private set; }
@@ -31,7 +19,6 @@ namespace NutBolts.Scripts.Data
 
         public GameData()
         {
-            Coins = PlayerPrefs.GetInt("Coins", 200);
             LevelsCompleted = PlayerPrefs.GetInt("LevelsCompleted", 1);
             
             foreach (var ability in Abilities)

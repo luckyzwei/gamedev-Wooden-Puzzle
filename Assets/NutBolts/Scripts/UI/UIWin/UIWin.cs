@@ -1,3 +1,4 @@
+using Game.Scripts.Shop;
 using NutBolts.Scripts.Data;
 using TMPro;
 using UnityEngine;
@@ -10,6 +11,7 @@ namespace NutBolts.Scripts.UI.UIWin
 {
     public class UIWin : VKLayer
     {
+        [Inject] private Bank _bank;
         [Inject] private VKAudioController _vkAudioController;
         [Inject] private VKLayerController _vkLayerController;
         [Inject] private DataMono _dataMono;
@@ -52,7 +54,7 @@ namespace NutBolts.Scripts.UI.UIWin
                 AbilityObj b = _levelObj.rewards[i].ConvertRewardToBooster();
                 if (b == null)
                 {
-                    _dataMono.Data.Coins += _levelObj.rewards[i].amount;
+                    _bank.ChangeCoins(_levelObj.rewards[i].amount);
                 }
                 else
                 {
